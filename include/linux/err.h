@@ -52,13 +52,20 @@ static inline void * __must_check ERR_CAST(const void *ptr)
 	return (void *) ptr;
 }
 
+<<<<<<< HEAD
 static inline int __must_check PTR_RET(const void *ptr)
+=======
+static inline int __must_check PTR_ERR_OR_ZERO(__force const void *ptr)
+>>>>>>> c973753... PTR_RET is now PTR_ERR_OR_ZERO
 {
 	if (IS_ERR(ptr))
 		return PTR_ERR(ptr);
 	else
 		return 0;
 }
+
+/* Deprecated */
+#define PTR_RET(p) PTR_ERR_OR_ZERO(p)
 
 #endif
 
