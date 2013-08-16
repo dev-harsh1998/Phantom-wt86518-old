@@ -573,6 +573,7 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
 {
 	int err = 0;
 
+<<<<<<< HEAD
 	/*
 	 *  If 'CONFIG_USER_NS' is not defined, current_user_ns()
 	 * is already defined as '&init_user_ns'.
@@ -581,6 +582,8 @@ static int audit_netlink_ok(struct sk_buff *skb, u16 msg_type)
 	 * - jollaman999 -
 	 */
 #ifdef CONFIG_USER_NS
+=======
+>>>>>>> 280bc76... audit: allow user processes to log from another PID namespace
 	/* Only support initial user namespace for now. */
 	if ((current_user_ns() != &init_user_ns))
 		return -EPERM;
