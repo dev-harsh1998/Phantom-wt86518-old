@@ -684,9 +684,7 @@ static int __init vfp_init(void)
 {
 	unsigned int vfpsid;
 	unsigned int cpu_arch = cpu_architecture();
-#ifdef CONFIG_PROC_FS
-	static struct proc_dir_entry *procfs_entry;
-#endif
+
 	if (cpu_arch >= CPU_ARCH_ARMv6)
 		on_each_cpu(vfp_enable, NULL, 1);
 
@@ -761,7 +759,14 @@ static int __init vfp_init(void)
 		}
 	}
 
+	return 0;
+}
+
+static int __init vfp_rootfs_init(void)
+{
 #ifdef CONFIG_PROC_FS
+	static struct proc_dir_entry *procfs_entry;
+
 	procfs_entry = proc_create("cpu/vfp_bounce", S_IRUGO, NULL,
 			&vfp_bounce_fops);
 	if (!procfs_entry)
@@ -771,4 +776,9 @@ static int __init vfp_init(void)
 	return 0;
 }
 
+<<<<<<< HEAD
 late_initcall(vfp_init);
+=======
+core_initcall(vfp_init);
+rootfs_initcall(vfp_rootfs_init);
+>>>>>>> 4926e4e... arm: vfpmodule: Fix warning procfs vfp_bounce reporting failed
