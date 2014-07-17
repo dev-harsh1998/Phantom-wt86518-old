@@ -603,7 +603,11 @@ void memzero_explicit(void *s, size_t count)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	OPTIMIZER_HIDE_VAR(s);
+=======
+	barrier();
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 	barrier();
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
