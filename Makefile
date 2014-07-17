@@ -1,7 +1,11 @@
 VERSION = 3
 PATCHLEVEL = 10
 <<<<<<< HEAD
+<<<<<<< HEAD
 SUBLEVEL = 94
+=======
+SUBLEVEL = 103
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 SUBLEVEL = 103
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
@@ -398,9 +402,13 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
 <<<<<<< HEAD
+<<<<<<< HEAD
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
+=======
+		   -std=gnu89
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 		   -std=gnu89
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
