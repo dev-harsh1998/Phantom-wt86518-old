@@ -591,8 +591,11 @@ enum {
 #define EXT4_FREE_BLOCKS_NOFREE_FIRST_CLUSTER	0x0010
 #define EXT4_FREE_BLOCKS_NOFREE_LAST_CLUSTER	0x0020
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define EXT4_FREE_BLOCKS_RESERVE	0x0040
 =======
+=======
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 #define EXT4_FREE_BLOCKS_RESERVE		0x0040
 
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
