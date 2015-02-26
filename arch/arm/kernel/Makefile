@@ -90,3 +90,4 @@ endif
 extra-y := $(head-y) vmlinux.lds
 
 obj-y += mako_hotplug.o
+obj-y += intelli_plug.o

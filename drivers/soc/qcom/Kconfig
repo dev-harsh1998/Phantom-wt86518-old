@@ -561,6 +561,7 @@ config MSM_PERFORMANCE
 	  It ensures that no more than a user specified number of CPUs stay
 	  online at any given point in time.
 
+
 config MSM_PERFORMANCE_HOTPLUG_ON
         bool "Hotplug functionality through msm_performance turned on"
         depends on MSM_PERFORMANCE
@@ -577,7 +578,6 @@ config MSM_CPU_FREQ_SET_MIN_MAX
 	help
 	  Allow setting min and max CPU frequencies. Sysfs can be used
 	  to override these values.
-
 
 config MSM_CPU_FREQ_MAX
 	int "Max CPU Frequency"
@@ -601,5 +601,14 @@ config MSM_HOTPLUG
 	help
 	  The MSM hotplug driver controls on-/offlining of additional cores based
 	  on current cpu load.
+
+config INTELLI_HOTPLUG
+	bool "Intelli hotplug driver"
+	depends on HOTPLUG_CPU
+	default y
+	help
+	  An intelligent cpu hotplug driver for
+	  Low Latency Frequency Transition capable processors.
+
 source "drivers/soc/qcom/memshare/Kconfig"
 endif # ARCH_MSM
