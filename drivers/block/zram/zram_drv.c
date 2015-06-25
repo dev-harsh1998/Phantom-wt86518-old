@@ -414,9 +414,12 @@ static ssize_t comp_algorithm_store(struct device *dev,
 	struct zram *zram = dev_to_zram(dev);
 	size_t sz;
 
+<<<<<<< HEAD
 	if (!zcomp_available_algorithm(buf))
 		return -EINVAL;
 
+=======
+>>>>>>> dc2a0f4... zram: cut trailing newline in algorithm name
 	down_write(&zram->init_lock);
 	if (init_done(zram)) {
 		up_write(&zram->init_lock);
