@@ -643,7 +643,7 @@ static int cpufreq_impulse_speedchange_task(void *data)
 				if (tunables->powersave_bias || suspended)
 					__cpufreq_driver_target(pcpu->policy,
 								max_freq,
-								CPUFREQ_RELATION_C);
+								CPUFREQ_RELATION_L);
 				else
 					__cpufreq_driver_target(pcpu->policy,
 								max_freq,
