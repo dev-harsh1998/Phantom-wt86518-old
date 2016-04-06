@@ -590,4 +590,22 @@ config MSM_CPU_FREQ_MIN
 
 endif # CPU_FREQ_MSM
 
+<<<<<<< HEAD
+=======
+config SERIAL_NUM
+	bool "Enable Serial Number Proc Interface"
+	help
+	  Provide a interface for reading CPU serial number
+
+config STATE_NOTIFIER
+        bool "State Notifier"
+
+config SECBOOT_FUSE
+	bool "Enable Secure boot fuse Proc Interface"
+	help
+	  Provide a interface for reading CPU secure boot fuse setting
+
+source "drivers/soc/qcom/memshare/Kconfig"
+
+>>>>>>> f526dcb... msm: Import state notifier driver
 endif # ARCH_MSM
