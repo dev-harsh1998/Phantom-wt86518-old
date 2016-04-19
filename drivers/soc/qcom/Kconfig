@@ -569,6 +569,7 @@ config MSM_PERFORMANCE_HOTPLUG_ON
 	  If some other core-control driver is present turn off the core-control
 	  capability of msm_performance driver. Setting this flag to false will
 
+<<<<<<< HEAD
 if CPU_FREQ_MSM
 
 config MSM_CPU_FREQ_SET_MIN_MAX
@@ -577,6 +578,17 @@ config MSM_CPU_FREQ_SET_MIN_MAX
 	help
 	  Allow setting min and max CPU frequencies. Sysfs can be used
 	  to override these values.
+=======
+config MSM_HOTPLUG
+	bool "MSM hotplug driver"
+	depends on HOTPLUG_CPU
+	default y
+	help
+	  The MSM hotplug driver controls on-/offlining of additional cores based
+	  on current cpu load.
+
+source "drivers/soc/qcom/memshare/Kconfig"
+>>>>>>> 873b939... Add MSM hotplug
 
 config MSM_CPU_FREQ_MAX
 	int "Max CPU Frequency"
