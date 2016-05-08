@@ -163,6 +163,12 @@ config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
 	  frequency lookup tables and optimized scaling triggers instead 
 	  % frequency steps to get smooth up/downscaling dependant on CPU load.
 
+config CPU_FREQ_DEFAULT_GOV_SMARTMAX
+        bool "smartmax"
+        select CPU_FREQ_GOV_SMARTMAX
+        help
+          Use the CPUFreq governor 'smartmax' as default.
+
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -276,6 +282,13 @@ config CPU_FREQ_GOV_BARRY_ALLEN
 config CPU_FREQ_GOV_ZZMOOVE
 	tristate "'zzmoove' cpufreq governor"
 	depends on CPU_FREQ
+
+config CPU_FREQ_GOV_SMARTMAX
+           tristate "'smartmax' cpufreq governor"
+           depends on CPU_FREQ
+           help
+             smartmax' - a "smart" optimized governor!
+             If in doubt, say N.
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
