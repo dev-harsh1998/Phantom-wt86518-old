@@ -92,13 +92,18 @@ static int msm_lsm_queue_lab_buffer(struct lsm_priv *prtd, int i)
 	struct lsm_cmd_read cmd_read;
 
 	if (!prtd || !prtd->lsm_client) {
-		pr_err("%s: Invalid params prtd %p lsm client %p\n",
+		pr_err("%s: Invalid params prtd %pK lsm client %pK\n",
 			__func__, prtd, ((!prtd) ? NULL : prtd->lsm_client));
 		return -EINVAL;
 	}
 	if (!prtd->lsm_client->lab_buffer ||
 		i >= prtd->lsm_client->hw_params.period_count) {
+<<<<<<< HEAD
 		pr_err("%s: Lab buffer not setup %p incorrect index %d period count %d\n",
+=======
+		dev_err(rtd->dev,
+			"%s: Lab buffer not setup %pK incorrect index %d period count %d\n",
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			__func__, prtd->lsm_client->lab_buffer, i,
 			prtd->lsm_client->hw_params.period_count);
 		return -EINVAL;
@@ -122,12 +127,17 @@ static int lsm_lab_buffer_sanity(struct lsm_priv *prtd,
 {
 	int i = 0, rc = -EINVAL;
 	if (!prtd || !read_done || !index) {
-		pr_err("%s: Invalid params prtd %p read_done %p index %p\n",
+		pr_err("%s: Invalid params prtd %pK read_done %pK index %pK\n",
 			__func__, prtd, read_done, index);
 		return -EINVAL;
 	}
 	if (!prtd->lsm_client->lab_enable || !prtd->lsm_client->lab_buffer) {
+<<<<<<< HEAD
 		pr_err("%s: Lab not enabled %d invalid lab buffer %p\n",
+=======
+		dev_err(rtd->dev,
+			"%s: Lab not enabled %d invalid lab buffer %pK\n",
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			__func__, prtd->lsm_client->lab_enable,
 			prtd->lsm_client->lab_buffer);
 		return -EINVAL;
@@ -139,8 +149,14 @@ static int lsm_lab_buffer_sanity(struct lsm_priv *prtd,
 			read_done->buf_addr_msw) &&
 			(prtd->lsm_client->lab_buffer[i].mem_map_handle ==
 			read_done->mem_map_handle)) {
+<<<<<<< HEAD
 			pr_debug("%s: Buffer found %pa memmap handle %d\n",
 			__func__, &prtd->lsm_client->lab_buffer[i].phys,
+=======
+			dev_dbg(rtd->dev,
+				"%s: Buffer found %pK memmap handle %d\n",
+				__func__, &prtd->lsm_client->lab_buffer[i].phys,
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			prtd->lsm_client->lab_buffer[i].mem_map_handle);
 			if (read_done->total_size >
 				prtd->lsm_client->lab_buffer[i].size) {
@@ -175,6 +191,7 @@ static void lsm_event_handler(uint32_t opcode, uint32_t token,
 		int rc;
 		struct lsm_cmd_read_done *read_done = payload;
 		int buf_index = 0;
+<<<<<<< HEAD
 		if (prtd->lsm_client->session != token
 		  || !read_done) {
 			pr_err("%s: EVENT_READ_DONE invalid callback client session %d callback sesson %d payload %p",
@@ -183,6 +200,14 @@ static void lsm_event_handler(uint32_t opcode, uint32_t token,
 		}
 		if (atomic_read(&prtd->read_abort)) {
 			pr_info("%s: read abort set skip data\n", __func__);
+=======
+		if (prtd->lsm_client->session != token ||
+		    !read_done) {
+			dev_err(rtd->dev,
+				"%s: EVENT_READ_DONE invalid callback, session %d callback %d payload %pK",
+				__func__, prtd->lsm_client->session,
+				token, read_done);
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			return;
 		}
 		if (!lsm_lab_buffer_sanity(prtd, read_done, &buf_index)) {
@@ -260,7 +285,7 @@ static int msm_lsm_lab_buffer_alloc(struct lsm_priv *lsm, int alloc)
 	int ret = 0;
 	struct snd_dma_buffer *dma_buf = NULL;
 	if (!lsm) {
-		pr_err("%s: Invalid param lsm %p\n", __func__, lsm);
+		pr_err("%s: Invalid param lsm %pK\n", __func__, lsm);
 		return -EINVAL;
 	}
 	if (alloc) {
@@ -408,8 +433,14 @@ static int msm_lsm_ioctl_shared(struct snd_pcm_substream *substream,
 		}
 		if (copy_from_user(prtd->lsm_client->sound_model.data,
 			   snd_model_v2.data, snd_model_v2.data_size)) {
+<<<<<<< HEAD
 			pr_err("%s: copy from user data failed\n"
 			       "data %p size %d\n", __func__,
+=======
+			dev_err(rtd->dev,
+				"%s: copy from user data failed\n"
+			       "data %pK size %d\n", __func__,
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			       snd_model_v2.data, snd_model_v2.data_size);
 			q6lsm_snd_model_buf_free(prtd->lsm_client);
 			rc = -EFAULT;
@@ -1176,8 +1207,14 @@ static int msm_lsm_hw_params(struct snd_pcm_substream *substream,
 	struct lsm_lab_hw_params *hw_params = NULL;
 
 	if (!prtd || !params) {
+<<<<<<< HEAD
 		pr_err("%s: invalid params prtd %p params %p",
 		 __func__, prtd, params);
+=======
+		dev_err(rtd->dev,
+			"%s: invalid params prtd %pK params %pK",
+			 __func__, prtd, params);
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 		return -EINVAL;
 	}
 	hw_params = &prtd->lsm_client->hw_params;
@@ -1207,7 +1244,12 @@ static snd_pcm_uframes_t msm_lsm_pcm_pointer(
 	struct lsm_priv *prtd = runtime->private_data;
 
 	if (!prtd) {
+<<<<<<< HEAD
 		pr_err("%s: Invalid param %p\n", __func__, prtd);
+=======
+		dev_err(rtd->dev,
+			"%s: Invalid param %pK\n", __func__, prtd);
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 		return 0;
 	}
 
@@ -1226,7 +1268,12 @@ static int msm_lsm_pcm_copy(struct snd_pcm_substream *substream, int ch,
 	int fbytes = 0, rc = 0;
 
 	if (!prtd) {
+<<<<<<< HEAD
 		pr_err("%s: Invalid param %p\n", __func__, prtd);
+=======
+		dev_err(rtd->dev,
+			"%s: Invalid param %pK\n", __func__, prtd);
+>>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 		return -EINVAL;
 	}
 
