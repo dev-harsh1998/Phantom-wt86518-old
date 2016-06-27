@@ -3115,6 +3115,7 @@ CONFIG_MSM_BUS_SCALING=y
 CONFIG_BUS_TOPOLOGY_ADHOC=y
 # CONFIG_MSM_UIM_HSL is not set
 # CONFIG_QPNP_HAPTIC is not set
+<<<<<<< HEAD:arch/arm/configs/cyanogenmod_wt86518-32_defconfig
 # CONFIG_QMP_CORE is not set
 CONFIG_MACH_WINGTECH=y
 CONFIG_MACH_WINGTECH_MSM8916=y
@@ -3123,6 +3124,9 @@ CONFIG_MACH_WINGTECH_MSM8916=y
 # Wingtech board selection
 #
 CONFIG_MACH_WT86518=y
+=======
+# CONFIG_SEEMP_CORE is not set
+>>>>>>> 3a8ae9b... update defconfig:arch/arm/configs/wt88047_kernel_defconfig
 CONFIG_CLKDEV_LOOKUP=y
 CONFIG_HAVE_CLK_PREPARE=y
 # CONFIG_MSM_CLK_CONTROLLER_V2 is not set
