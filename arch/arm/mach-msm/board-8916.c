@@ -27,9 +27,40 @@
 #include <soc/qcom/pm.h>
 #include "board-dt.h"
 #include "platsmp.h"
+#ifdef CONFIG_KEXEC_HARDBOOT
+#include <asm/setup.h>
+#include <asm/memory.h>
+#include <linux/memblock.h>
+#define XIAOMI_PERSISTENT_RAM_SIZE	(SZ_1M)
+#endif
 
 static void __init msm8916_dt_reserve(void)
 {
+#if 0
+#ifdef CONFIG_KEXEC_HARDBOOT
+	// Reserve space for hardboot page - just after ram_console,
+	// at the start of second memory bank
+	int ret;
+	phys_addr_t start;
+	struct membank* bank;
+
+	if (meminfo.nr_banks < 2) {
+		pr_err("%s: not enough membank\n", __func__);
+		return;
+	}
+
+	bank = &meminfo.bank[1];
+	start = bank->start + SZ_1M + XIAOMI_PERSISTENT_RAM_SIZE;
+	ret = memblock_remove(start, SZ_1M);
+	if(!ret)
+		pr_info("Hardboot page reserved at 0x%X\n", start);
+	else
+		pr_err("Failed to reserve space for hardboot page at 0x%X!\n", start);
+#endif
+#endif
+
+	pr_info("%s:%d Dumping Memblock Stats.....\n", __func__, __LINE__);
+	__memblock_dump_all();
 	of_scan_flat_dt(dt_scan_for_memory_reserve, NULL);
 }
 
