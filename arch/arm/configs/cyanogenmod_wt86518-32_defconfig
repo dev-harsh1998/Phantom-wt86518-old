@@ -273,11 +273,17 @@ CONFIG_IOSCHED_ZEN=y
 CONFIG_IOSCHED_SIOPLUS=y
 CONFIG_IOSCHED_TRIPNDROID=y
 CONFIG_IOSCHED_VR=y
+CONFIG_IOSCHED_FIFO=y
 # CONFIG_DEFAULT_DEADLINE is not set
 # CONFIG_DEFAULT_ROW is not set
 # CONFIG_DEFAULT_CFQ is not set
 # CONFIG_DEFAULT_BFQ is not set
 CONFIG_DEFAULT_NOOP=y
+<<<<<<< HEAD:arch/arm/configs/cyanogenmod_wt86518-32_defconfig
+=======
+# CONFIG_DEFAULT_VR is not set
+# CONFIG_DEFAULT_FIFO is not set
+>>>>>>> a42d84f... defconfig: enable fifo:arch/arm/configs/cyanogenmod_wt88047_defconfig
 CONFIG_DEFAULT_IOSCHED="noop"
 CONFIG_UNINLINE_SPIN_UNLOCK=y
 CONFIG_ARCH_SUPPORTS_ATOMIC_RMW=y
@@ -1630,16 +1636,31 @@ CONFIG_INPUT_GPIO=y
 # CONFIG_SENSORS_AP3426 is not set
 # CONFIG_SENSORS_LTR553 is not set
 CONFIG_SENSORS_MMC3416X=y
+<<<<<<< HEAD:arch/arm/configs/cyanogenmod_wt86518-32_defconfig
+=======
+# CONFIG_SENSORS_MMC3416X_ALLOW_OVERFLOW is not set
+# CONFIG_SENSORS_MMC3X30 is not set
+>>>>>>> a42d84f... defconfig: enable fifo:arch/arm/configs/cyanogenmod_wt88047_defconfig
 CONFIG_SENSORS_AKM09911=y
 CONFIG_SENSORS_AKM8963=y
 # CONFIG_SENSORS_STK3X1X is not set
 # CONFIG_SENSORS_CAPELLA_CM36283 is not set
+<<<<<<< HEAD:arch/arm/configs/cyanogenmod_wt86518-32_defconfig
 CONFIG_SENSORS_BMA2X2=y
 # CONFIG_SENSORS_BMA2X2_ENABLE_INT1 is not set
 # CONFIG_SENSORS_BMA2X2_ENABLE_INT2 is not set
 # CONFIG_SENSORS_BMI058 is not set
 CONFIG_SENSORS_ELAN_EPL2182=y
 # CONFIG_DISPSENSOR_CAMERA_OPEN is not set
+=======
+# CONFIG_INPUT_KIONIX_ACCEL is not set
+# CONFIG_SENSORS_BMA2X2 is not set
+# CONFIG_SENSORS_BMM050 is not set
+# CONFIG_SENSORS_BMG is not set
+# CONFIG_INPUT_LSM6DX0 is not set
+# CONFIG_SENSORS_ST480 is not set
+# CONFIG_SENSORS_BMI160 is not set
+>>>>>>> a42d84f... defconfig: enable fifo:arch/arm/configs/cyanogenmod_wt88047_defconfig
 
 #
 # Hardware I/O ports
