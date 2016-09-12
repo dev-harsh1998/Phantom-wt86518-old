@@ -1,6 +1,18 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL = 49
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+SUBLEVEL = 94
+=======
+SUBLEVEL = 103
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+=======
+SUBLEVEL = 103
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+=======
+SUBLEVEL = 103
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 EXTRAVERSION =
 NAME = TOSSUG Baby Fish
 
@@ -243,14 +255,23 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 <<<<<<< HEAD
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
+<<<<<<< HEAD
 HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
 HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
 =======
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
+HOSTCXXFLAGS = -O3 -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
+>>>>>>> parent of eeb25a1... fix merge conflict
+=======
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
 HOSTCXXFLAGS = -O2
+<<<<<<< HEAD
 >>>>>>> parent of b6f6e89... delete gcc 4 debries
+=======
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+>>>>>>> parent of eeb25a1... fix merge conflict
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -334,7 +355,11 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
+<<<<<<< HEAD
 CC		= ccache $(CROSS_COMPILE)gcc
+=======
+REAL_CC		= ccache $(CROSS_COMPILE)gcc
+>>>>>>> parent of eeb25a1... fix merge conflict
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -394,6 +419,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		   -fno-delete-null-pointer-checks \
 		   -Wno-bool-compare \
 		   -std=gnu89 \
@@ -405,6 +431,25 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 =======
 		   -fno-delete-null-pointer-checks
 >>>>>>> parent of b6f6e89... delete gcc 4 debries
+=======
+		   -fno-delete-null-pointer-checks \
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+		   -Wno-bool-compare \
+		   -std=gnu89 \
+		   $(KERNEL_FLAGS)
+=======
+		   -std=gnu89
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+=======
+		   -std=gnu89
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+=======
+		   -std=gnu89
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+
+>>>>>>> parent of eeb25a1... fix merge conflict
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -657,6 +702,8 @@ ifndef CONFIG_FUNCTION_TRACER
 KBUILD_CFLAGS	+= -fomit-frame-pointer
 endif
 endif
+
+KBUILD_CFLAGS   += $(call cc-option, -fno-var-tracking-assignments)
 
 ifdef CONFIG_DEBUG_INFO
 KBUILD_CFLAGS	+= -g
