@@ -393,11 +393,15 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 <<<<<<< HEAD
+<<<<<<< HEAD
 		   -fno-delete-null-pointer-checks \
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
 
+=======
+		   -fno-delete-null-pointer-checks
+>>>>>>> parent of b6f6e89... delete gcc 4 debries
 =======
 		   -fno-delete-null-pointer-checks
 >>>>>>> parent of b6f6e89... delete gcc 4 debries
