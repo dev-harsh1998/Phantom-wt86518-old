@@ -594,17 +594,12 @@ enum {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define EXT4_FREE_BLOCKS_RESERVE	0x0040
 =======
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-#define EXT4_FREE_BLOCKS_RESERVE		0x0040
-
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 #define EXT4_FREE_BLOCKS_RESERVE		0x0040
 
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)

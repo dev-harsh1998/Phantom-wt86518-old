@@ -2426,7 +2426,6 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 
 	if (datagrams == 0) {
 		datagrams = err;
@@ -2450,17 +2449,12 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 
 	if (datagrams == 0) {
 		datagrams = err;
 		goto out_put;
 	}
 
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 	/*
 	 * We may return less entries than requested (vlen) if the
