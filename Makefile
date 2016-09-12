@@ -249,6 +249,7 @@ HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-lo
 HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
 HOSTCXXFLAGS = -O3 -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of eeb25a1... fix merge conflict
 =======
 HOSTCC       = gcc
@@ -260,6 +261,8 @@ HOSTCXXFLAGS = -O2
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 >>>>>>> parent of eeb25a1... fix merge conflict
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
 =======
 >>>>>>> parent of 8242e4d... upstream chutiyapa 2
 
@@ -410,10 +413,14 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
 		   -fno-delete-null-pointer-checks \
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
+<<<<<<< HEAD
 
 =======
 		   -fno-delete-null-pointer-checks
@@ -426,6 +433,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
 
 >>>>>>> parent of eeb25a1... fix merge conflict
 KBUILD_AFLAGS_KERNEL :=
