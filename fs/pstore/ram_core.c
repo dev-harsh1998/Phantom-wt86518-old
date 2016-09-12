@@ -399,11 +399,8 @@ static void *persistent_ram_vmap(phys_addr_t start, size_t size,
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 	prot = pgprot_noncached(PAGE_KERNEL);
 =======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
@@ -414,9 +411,6 @@ static void *persistent_ram_vmap(phys_addr_t start, size_t size,
 		prot = pgprot_writecombine(PAGE_KERNEL);
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
@@ -465,9 +459,6 @@ static void *persistent_ram_iomap(phys_addr_t start, size_t size,
 	return va;
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
