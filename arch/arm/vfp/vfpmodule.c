@@ -776,9 +776,5 @@ static int __init vfp_rootfs_init(void)
 	return 0;
 }
 
-<<<<<<< HEAD
-late_initcall(vfp_init);
-=======
 core_initcall(vfp_init);
 rootfs_initcall(vfp_rootfs_init);
->>>>>>> 4926e4e... arm: vfpmodule: Fix warning procfs vfp_bounce reporting failed
