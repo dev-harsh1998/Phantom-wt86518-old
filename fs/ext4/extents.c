@@ -364,11 +364,8 @@ static int ext4_valid_extent(struct inode *inode, struct ext4_extent *ext)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 	if (len == 0 || lblock > last)
 =======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 	/*
@@ -378,9 +375,6 @@ static int ext4_valid_extent(struct inode *inode, struct ext4_extent *ext)
 	 */
 	if (lblock + len <= lblock)
 <<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
@@ -1748,12 +1742,7 @@ static void ext4_ext_try_to_merge_up(handle_t *handle,
 	ext4_free_blocks(handle, inode, NULL, blk, 1,
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET | EXT4_FREE_BLOCKS_RESERVE);
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 =======
 			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
 			 EXT4_FREE_BLOCKS_RESERVE);
