@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
-=======
-/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
->>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -185,18 +181,9 @@ void ocm_core_open(void)
 	if (q6core_lcl.core_handle_q == NULL)
 		q6core_lcl.core_handle_q = apr_register("ADSP", "CORE",
 					aprv2_core_fn_q, 0xFFFFFFFF, NULL);
-<<<<<<< HEAD
 	pr_debug("%s: Open_q %p\n", __func__, q6core_lcl.core_handle_q);
 	if (q6core_lcl.core_handle_q == NULL)
 		pr_err("%s: Unable to register CORE\n", __func__);
-=======
-	pr_debug("%s: Open_q %pK\n", __func__, q6core_lcl.core_handle_q);
-	if (q6core_lcl.core_handle_q == NULL) {
-			if (__ratelimit(&rl))
-				pr_err("%s: Unable to register CORE\n",
-					__func__);
-	}
->>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 }
 
 int32_t core_set_license(uint32_t key, uint32_t module_id)
@@ -354,7 +341,7 @@ int core_dts_eagle_set(int size, char *data)
 
 	pr_debug("DTS_EAGLE_CORE - %s\n", __func__);
 	if (size <= 0 || !data) {
-		pr_err("DTS_EAGLE_CORE - %s: invalid size %i or pointer %pK.\n",
+		pr_err("DTS_EAGLE_CORE - %s: invalid size %i or pointer %p.\n",
 			__func__, size, data);
 		return -EINVAL;
 	}
@@ -400,7 +387,7 @@ int core_dts_eagle_get(int id, int size, char *data)
 
 	pr_debug("DTS_EAGLE_CORE - %s\n", __func__);
 	if (size <= 0 || !data) {
-		pr_err("DTS_EAGLE_CORE - %s: invalid size %i or pointer %pK.\n",
+		pr_err("DTS_EAGLE_CORE - %s: invalid size %i or pointer %p.\n",
 			__func__, size, data);
 		return -EINVAL;
 	}

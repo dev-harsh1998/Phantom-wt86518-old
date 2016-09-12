@@ -319,13 +319,8 @@ int adm_dts_eagle_get(int port_id, int copp_idx, int param_id,
 		return -EINVAL;
 	}
 
-<<<<<<< HEAD
 	if (size <= 0 || !data) {
 		pr_err("DTS_EAGLE_ADM - %s: invalid size %i or pointer %p.\n",
-=======
-	if ((size == 0) || !data) {
-		pr_err("DTS_EAGLE_ADM - %s: invalid size %u or pointer %pK.\n",
->>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 			__func__, size, data);
 		return -EINVAL;
 	}
@@ -1005,7 +1000,7 @@ static int32_t adm_callback(struct apr_client_data *data, void *priv)
 	payload = data->payload;
 
 	if (data->opcode == RESET_EVENTS) {
-		pr_debug("%s: Reset event is received: %d %d apr[%pK]\n",
+		pr_debug("%s: Reset event is received: %d %d apr[%p]\n",
 			__func__,
 			data->reset_event, data->reset_proc, this_adm.apr);
 		if (this_adm.apr) {
@@ -1402,7 +1397,7 @@ static void remap_cal_data(struct cal_block_data *cal_block, int cal_index)
 			pr_err("%s: ADM mmap did not work! size = %zd ret %d\n",
 				__func__,
 				cal_block->map_data.map_size, ret);
-			pr_debug("%s: ADM mmap did not work! addr = 0x%pK, size = %zd ret %d\n",
+			pr_debug("%s: ADM mmap did not work! addr = 0x%pa, size = %zd ret %d\n",
 				__func__,
 				&cal_block->cal_data.paddr,
 				cal_block->map_data.map_size, ret);
@@ -1464,7 +1459,7 @@ static void send_adm_custom_topology(void)
 	adm_top.payload_size = cal_block->cal_data.size;
 
 	atomic_set(&this_adm.adm_stat, 0);
-	pr_debug("%s: Sending ADM_CMD_ADD_TOPOLOGIES payload = 0x%pK, size = %d\n",
+	pr_debug("%s: Sending ADM_CMD_ADD_TOPOLOGIES payload = 0x%pa, size = %d\n",
 		__func__, &cal_block->cal_data.paddr,
 		adm_top.payload_size);
 	result = apr_send_pkt(this_adm.apr, (uint32_t *)&adm_top);
@@ -1546,14 +1541,14 @@ static int send_adm_cal_block(int port_id, int copp_idx,
 	adm_params.payload_size = cal_block->cal_data.size;
 
 	atomic_set(&this_adm.copp.stat[port_idx][copp_idx], 0);
-	pr_debug("%s: Sending SET_PARAMS payload = 0x%pK, size = %d\n",
+	pr_debug("%s: Sending SET_PARAMS payload = 0x%pa, size = %d\n",
 		__func__, &cal_block->cal_data.paddr,
 		adm_params.payload_size);
 	result = apr_send_pkt(this_adm.apr, (uint32_t *)&adm_params);
 	if (result < 0) {
 		pr_err("%s: Set params failed port 0x%x result %d\n",
 				__func__, port_id, result);
-		pr_debug("%s: Set params failed port = 0x%x payload = 0x%pK result %d\n",
+		pr_debug("%s: Set params failed port = 0x%x payload = 0x%pa result %d\n",
 			__func__, port_id, &cal_block->cal_data.paddr, result);
 		result = -EINVAL;
 		goto done;
@@ -1565,7 +1560,7 @@ static int send_adm_cal_block(int port_id, int copp_idx,
 	if (!result) {
 		pr_err("%s: Set params timed out port = 0x%x\n",
 				__func__, port_id);
-		pr_debug("%s: Set params timed out port = 0x%x, payload = 0x%pK\n",
+		pr_debug("%s: Set params timed out port = 0x%x, payload = 0x%pa\n",
 			__func__, port_id, &cal_block->cal_data.paddr);
 		result = -EINVAL;
 		goto done;
@@ -1906,7 +1901,7 @@ int adm_open(int port_id, int path, int rate, int channel_mode, int topology,
 		res = adm_memory_map_regions(&this_adm.outband_memmap.paddr, 0,
 		(uint32_t *)&this_adm.outband_memmap.size, 1);
 		if (res < 0) {
-			pr_err("%s: SRS adm_memory_map_regions failed ! addr = 0x%pK, size = %d\n",
+			pr_err("%s: SRS adm_memory_map_regions failed ! addr = 0x%p, size = %d\n",
 			 __func__, (void*)this_adm.outband_memmap.paddr,
 		(uint32_t)this_adm.outband_memmap.size);
 		}
@@ -2296,7 +2291,7 @@ int adm_map_rtac_block(struct rtac_cal_block_data *cal_block)
 		pr_err("%s: RTAC mmap did not work! size = %d result %d\n",
 			__func__,
 			cal_block->map_data.map_size, result);
-		pr_debug("%s: RTAC mmap did not work! addr = 0x%pK, size = %d\n",
+		pr_debug("%s: RTAC mmap did not work! addr = 0x%pa, size = %d\n",
 			__func__,
 			&cal_block->cal_data.paddr,
 			cal_block->map_data.map_size);
@@ -3204,353 +3199,6 @@ end:
 	return ret;
 }
 
-<<<<<<< HEAD
-=======
-int adm_set_sound_focus(int port_id, int copp_idx,
-			struct sound_focus_param soundFocusData)
-{
-	struct adm_set_fluence_soundfocus_param soundfocus_params;
-	int sz = 0;
-	int ret  = 0;
-	int port_idx;
-	int i;
-
-	pr_debug("%s: Enter, port_id %d, copp_idx %d\n",
-		  __func__, port_id, copp_idx);
-
-	port_id = afe_convert_virtual_to_portid(port_id);
-	port_idx = adm_validate_and_get_port_index(port_id);
-	if (port_idx < 0) {
-		pr_err("%s: Invalid port_id %#x\n", __func__, port_id);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	if (copp_idx < 0 || copp_idx >= MAX_COPPS_PER_PORT) {
-		pr_err("%s: Invalid copp_num: %d\n", __func__, copp_idx);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	sz = sizeof(struct adm_set_fluence_soundfocus_param);
-	soundfocus_params.params.hdr.hdr_field =
-		APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD, APR_HDR_LEN(APR_HDR_SIZE),
-			      APR_PKT_VER);
-	soundfocus_params.params.hdr.pkt_size = sz;
-	soundfocus_params.params.hdr.src_svc = APR_SVC_ADM;
-	soundfocus_params.params.hdr.src_domain = APR_DOMAIN_APPS;
-	soundfocus_params.params.hdr.src_port = port_id;
-	soundfocus_params.params.hdr.dest_svc = APR_SVC_ADM;
-	soundfocus_params.params.hdr.dest_domain = APR_DOMAIN_ADSP;
-	soundfocus_params.params.hdr.dest_port =
-			atomic_read(&this_adm.copp.id[port_idx][copp_idx]);
-	soundfocus_params.params.hdr.token = port_idx << 16 |
-				ADM_CLIENT_ID_SOURCE_TRACKING << 8 | copp_idx;
-	soundfocus_params.params.hdr.opcode = ADM_CMD_SET_PP_PARAMS_V5;
-	soundfocus_params.params.payload_addr_lsw = 0;
-	soundfocus_params.params.payload_addr_msw = 0;
-	soundfocus_params.params.mem_map_handle = 0;
-	soundfocus_params.params.payload_size = sizeof(soundfocus_params) -
-				sizeof(soundfocus_params.params);
-	soundfocus_params.data.module_id = VOICEPROC_MODULE_ID_GENERIC_TX;
-	soundfocus_params.data.param_id = VOICEPROC_PARAM_ID_FLUENCE_SOUNDFOCUS;
-	soundfocus_params.data.param_size =
-		soundfocus_params.params.payload_size -
-		sizeof(soundfocus_params.data);
-	soundfocus_params.data.reserved = 0;
-
-	memset(&(soundfocus_params.soundfocus_data), 0xFF,
-		sizeof(struct adm_param_fluence_soundfocus_t));
-	for (i = 0; i < MAX_SECTORS; i++) {
-		soundfocus_params.soundfocus_data.start_angles[i] =
-			soundFocusData.start_angle[i];
-		soundfocus_params.soundfocus_data.enables[i] =
-			soundFocusData.enable[i];
-		pr_debug("%s: start_angle[%d] = %d\n",
-			  __func__, i, soundFocusData.start_angle[i]);
-		pr_debug("%s: enable[%d] = %d\n",
-			  __func__, i, soundFocusData.enable[i]);
-	}
-	soundfocus_params.soundfocus_data.gain_step =
-					soundFocusData.gain_step;
-	pr_debug("%s: gain_step = %d\n", __func__, soundFocusData.gain_step);
-
-	soundfocus_params.soundfocus_data.reserved = 0;
-
-	atomic_set(&this_adm.copp.stat[port_idx][copp_idx], 0);
-	ret = apr_send_pkt(this_adm.apr, (uint32_t *)&soundfocus_params);
-	if (ret < 0) {
-		pr_err("%s: Set params failed\n", __func__);
-
-		ret = -EINVAL;
-		goto done;
-	}
-	/* Wait for the callback */
-	ret = wait_event_timeout(this_adm.copp.wait[port_idx][copp_idx],
-		atomic_read(&this_adm.copp.stat[port_idx][copp_idx]),
-		msecs_to_jiffies(TIMEOUT_MS));
-	if (!ret) {
-		pr_err("%s: Set params timed out\n", __func__);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	if (this_adm.sourceTrackingData.apr_cmd_status != 0) {
-		pr_err("%s - set params returned error %d\n",
-			__func__, this_adm.sourceTrackingData.apr_cmd_status);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	ret = 0;
-
-done:
-	pr_debug("%s: Exit, ret=%d\n", __func__, ret);
-
-	return ret;
-}
-
-int adm_get_sound_focus(int port_id, int copp_idx,
-			struct sound_focus_param *soundFocusData)
-{
-	int ret = 0, i;
-	char *params_value;
-	uint32_t param_payload_len = sizeof(struct adm_param_data_v5) +
-				sizeof(struct adm_param_fluence_soundfocus_t);
-	struct adm_param_fluence_soundfocus_t *soundfocus_params;
-
-	pr_debug("%s: Enter, port_id %d, copp_idx %d\n",
-		  __func__, port_id, copp_idx);
-
-	params_value = kzalloc(param_payload_len, GFP_KERNEL);
-	if (!params_value) {
-		pr_err("%s, params memory alloc failed\n", __func__);
-
-		ret = -ENOMEM;
-		goto done;
-	}
-	ret = adm_get_params_v2(port_id, copp_idx,
-				VOICEPROC_MODULE_ID_GENERIC_TX,
-				VOICEPROC_PARAM_ID_FLUENCE_SOUNDFOCUS,
-				param_payload_len,
-				params_value,
-				ADM_CLIENT_ID_SOURCE_TRACKING);
-	if (ret != 0) {
-		pr_err("%s: get parameters failed ret:%d\n", __func__, ret);
-
-		kfree(params_value);
-		ret = -EINVAL;
-		goto done;
-	}
-
-	if (this_adm.sourceTrackingData.apr_cmd_status != 0) {
-		pr_err("%s - get params returned error %d\n",
-			__func__, this_adm.sourceTrackingData.apr_cmd_status);
-
-		kfree(params_value);
-		ret = -EINVAL;
-		goto done;
-	}
-
-	soundfocus_params = (struct adm_param_fluence_soundfocus_t *)
-								params_value;
-	for (i = 0; i < MAX_SECTORS; i++) {
-		soundFocusData->start_angle[i] =
-					soundfocus_params->start_angles[i];
-		soundFocusData->enable[i] = soundfocus_params->enables[i];
-		pr_debug("%s: start_angle[%d] = %d\n",
-			  __func__, i, soundFocusData->start_angle[i]);
-		pr_debug("%s: enable[%d] = %d\n",
-			  __func__, i, soundFocusData->enable[i]);
-	}
-	soundFocusData->gain_step = soundfocus_params->gain_step;
-	pr_debug("%s: gain_step = %d\n", __func__, soundFocusData->gain_step);
-
-	kfree(params_value);
-
-done:
-	pr_debug("%s: Exit, ret = %d\n", __func__, ret);
-
-	return ret;
-}
-
-static int adm_source_tracking_alloc_map_memory(void)
-{
-	int ret;
-
-	pr_debug("%s: Enter\n", __func__);
-
-	ret = msm_audio_ion_alloc("SOURCE_TRACKING",
-				  &this_adm.sourceTrackingData.ion_client,
-				  &this_adm.sourceTrackingData.ion_handle,
-				  AUD_PROC_BLOCK_SIZE,
-				  &this_adm.sourceTrackingData.memmap.paddr,
-				  &this_adm.sourceTrackingData.memmap.size,
-				  &this_adm.sourceTrackingData.memmap.kvaddr);
-	if (ret != 0) {
-		pr_err("%s: failed to allocate memory\n", __func__);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	atomic_set(&this_adm.mem_map_index, ADM_MEM_MAP_INDEX_SOURCE_TRACKING);
-	ret = adm_memory_map_regions(&this_adm.sourceTrackingData.memmap.paddr,
-			0,
-			(uint32_t *)&this_adm.sourceTrackingData.memmap.size,
-			1);
-	if (ret < 0) {
-		pr_err("%s: failed to map memory, paddr = 0x%pK, size = %d\n",
-			__func__,
-			(void *)this_adm.sourceTrackingData.memmap.paddr,
-			(uint32_t)this_adm.sourceTrackingData.memmap.size);
-
-		msm_audio_ion_free(this_adm.sourceTrackingData.ion_client,
-				   this_adm.sourceTrackingData.ion_handle);
-		this_adm.sourceTrackingData.ion_client = NULL;
-		this_adm.sourceTrackingData.ion_handle = NULL;
-		this_adm.sourceTrackingData.memmap.size = 0;
-		this_adm.sourceTrackingData.memmap.kvaddr = NULL;
-		this_adm.sourceTrackingData.memmap.paddr = 0;
-		this_adm.sourceTrackingData.apr_cmd_status = -1;
-		atomic_set(&this_adm.mem_map_handles
-				[ADM_MEM_MAP_INDEX_SOURCE_TRACKING], 0);
-
-		ret = -EINVAL;
-		goto done;
-	}
-	ret = 0;
-	pr_debug("%s: paddr = 0x%pK, size = %d, mem_map_handle = 0x%x\n",
-		  __func__, (void *)this_adm.sourceTrackingData.memmap.paddr,
-		  (uint32_t)this_adm.sourceTrackingData.memmap.size,
-		  atomic_read(&this_adm.mem_map_handles
-			      [ADM_MEM_MAP_INDEX_SOURCE_TRACKING]));
-
-done:
-	pr_debug("%s: Exit, ret = %d\n", __func__, ret);
-
-	return ret;
-}
-
-int adm_get_source_tracking(int port_id, int copp_idx,
-			    struct source_tracking_param *sourceTrackingData)
-{
-	struct adm_cmd_get_pp_params_v5 admp;
-	int p_idx, ret = 0, i;
-	struct adm_param_fluence_sourcetracking_t *source_tracking_params;
-
-	pr_debug("%s: Enter, port_id %d, copp_idx %d\n",
-		  __func__, port_id, copp_idx);
-
-	if (this_adm.sourceTrackingData.memmap.paddr == 0) {
-		/* Allocate and map shared memory for out of band usage */
-		ret = adm_source_tracking_alloc_map_memory();
-		if (ret != 0) {
-			ret = -EINVAL;
-			goto done;
-		}
-	}
-
-	port_id = afe_convert_virtual_to_portid(port_id);
-	p_idx = adm_validate_and_get_port_index(port_id);
-	if (p_idx < 0) {
-		pr_err("%s - invalid port index %i, port id %i, copp idx %i\n",
-			__func__, p_idx, port_id, copp_idx);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	admp.hdr.hdr_field = APR_HDR_FIELD(APR_MSG_TYPE_SEQ_CMD,
-				APR_HDR_LEN(APR_HDR_SIZE), APR_PKT_VER);
-	admp.hdr.pkt_size = APR_PKT_SIZE(APR_HDR_SIZE, sizeof(admp));
-	admp.hdr.src_svc = APR_SVC_ADM;
-	admp.hdr.src_domain = APR_DOMAIN_APPS;
-	admp.hdr.src_port = port_id;
-	admp.hdr.dest_svc = APR_SVC_ADM;
-	admp.hdr.dest_domain = APR_DOMAIN_ADSP;
-	admp.hdr.dest_port = atomic_read(&this_adm.copp.id[p_idx][copp_idx]);
-	admp.hdr.token = p_idx << 16 | ADM_CLIENT_ID_SOURCE_TRACKING << 8 |
-			 copp_idx;
-	admp.hdr.opcode = ADM_CMD_GET_PP_PARAMS_V5;
-	admp.data_payload_addr_lsw =
-		lower_32_bits(this_adm.sourceTrackingData.memmap.paddr);
-	admp.data_payload_addr_msw =
-		upper_32_bits(this_adm.sourceTrackingData.memmap.paddr);
-	admp.mem_map_handle = atomic_read(&this_adm.mem_map_handles[
-					  ADM_MEM_MAP_INDEX_SOURCE_TRACKING]);
-	admp.module_id = VOICEPROC_MODULE_ID_GENERIC_TX;
-	admp.param_id = VOICEPROC_PARAM_ID_FLUENCE_SOURCETRACKING;
-	admp.param_max_size = sizeof(struct adm_param_fluence_sourcetracking_t)
-				+ sizeof(struct adm_param_data_v5);
-	admp.reserved = 0;
-
-	atomic_set(&this_adm.copp.stat[p_idx][copp_idx], 0);
-
-	ret = apr_send_pkt(this_adm.apr, (uint32_t *)&admp);
-	if (ret < 0) {
-		pr_err("%s - failed to get Source Tracking Params\n",
-			__func__);
-
-		ret = -EINVAL;
-		goto done;
-	}
-	ret = wait_event_timeout(this_adm.copp.wait[p_idx][copp_idx],
-			atomic_read(&this_adm.copp.stat[p_idx][copp_idx]),
-			msecs_to_jiffies(TIMEOUT_MS));
-	if (!ret) {
-		pr_err("%s - get params timed out\n", __func__);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	if (this_adm.sourceTrackingData.apr_cmd_status != 0) {
-		pr_err("%s - get params returned error %d\n",
-			__func__, this_adm.sourceTrackingData.apr_cmd_status);
-
-		ret = -EINVAL;
-		goto done;
-	}
-
-	source_tracking_params = (struct adm_param_fluence_sourcetracking_t *)
-			(this_adm.sourceTrackingData.memmap.kvaddr +
-			 sizeof(struct adm_param_data_v5));
-	for (i = 0; i < MAX_SECTORS; i++) {
-		sourceTrackingData->vad[i] = source_tracking_params->vad[i];
-		pr_debug("%s: vad[%d] = %d\n",
-			  __func__, i, sourceTrackingData->vad[i]);
-	}
-	sourceTrackingData->doa_speech = source_tracking_params->doa_speech;
-	pr_debug("%s: doa_speech = %d\n",
-		  __func__, sourceTrackingData->doa_speech);
-
-	for (i = 0; i < MAX_NOISE_SOURCE_INDICATORS; i++) {
-		sourceTrackingData->doa_noise[i] =
-					source_tracking_params->doa_noise[i];
-		pr_debug("%s: doa_noise[%d] = %d\n",
-			  __func__, i, sourceTrackingData->doa_noise[i]);
-	}
-	for (i = 0; i < MAX_POLAR_ACTIVITY_INDICATORS; i++) {
-		sourceTrackingData->polar_activity[i] =
-				source_tracking_params->polar_activity[i];
-		pr_debug("%s: polar_activity[%d] = %d\n",
-			  __func__, i, sourceTrackingData->polar_activity[i]);
-	}
-
-	ret = 0;
-
-done:
-	pr_debug("%s: Exit, ret=%d\n", __func__, ret);
-
-	return ret;
-}
-
->>>>>>> 35322af... ASoC: msm: qdsp6v2: Change audio drivers to use %pK
 static int __init adm_init(void)
 {
 	int i = 0, j;
