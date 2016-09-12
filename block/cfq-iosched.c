@@ -3648,12 +3648,9 @@ cfq_get_queue(struct cfq_data *cfqd, bool is_sync, struct cfq_io_cq *cic,
 	int ioprio_class = IOPRIO_PRIO_CLASS(cic->ioprio);
 	int ioprio = IOPRIO_PRIO_DATA(cic->ioprio);
 <<<<<<< HEAD
-<<<<<<< HEAD
 	struct cfq_queue **async_cfqq;
 	struct cfq_queue *cfqq;
 =======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 	struct cfq_queue **async_cfqq = NULL;
 	struct cfq_queue *cfqq = NULL;
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)

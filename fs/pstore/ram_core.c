@@ -397,18 +397,12 @@ static void *persistent_ram_vmap(phys_addr_t start, size_t size,
 	page_count = DIV_ROUND_UP(size + offset_in_page(start), PAGE_SIZE);
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 	prot = pgprot_noncached(PAGE_KERNEL);
 =======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 	if (memtype)
 		prot = pgprot_noncached(PAGE_KERNEL);
 	else
 		prot = pgprot_writecombine(PAGE_KERNEL);
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 
 	pages = kmalloc(sizeof(struct page *) * page_count, GFP_KERNEL);
@@ -451,9 +445,6 @@ static void *persistent_ram_iomap(phys_addr_t start, size_t size,
 		va = ioremap_wc(start, size);
 
 	return va;
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 }
 
