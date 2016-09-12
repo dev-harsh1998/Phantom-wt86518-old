@@ -361,41 +361,9 @@ static int ext4_valid_extent(struct inode *inode, struct ext4_extent *ext)
 	ext4_fsblk_t block = ext4_ext_pblock(ext);
 	int len = ext4_ext_get_actual_len(ext);
 	ext4_lblk_t lblock = le32_to_cpu(ext->ee_block);
+	ext4_lblk_t last = lblock + len - 1;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	if (len == 0 || lblock > last)
-=======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-	/*
-	 * We allow neither:
-	 *  - zero length
-	 *  - overflow/wrap-around
-	 */
-	if (lblock + len <= lblock)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+	if (lblock > last)
 		return 0;
 	return ext4_data_block_valid(EXT4_SB(inode->i_sb), block, len);
 }
@@ -484,10 +452,6 @@ static int __ext4_ext_check(const char *function, unsigned int line,
 	}
 	if (!ext4_valid_extent_entries(inode, eh, depth)) {
 		error_msg = "invalid extent entries";
-		goto corrupted;
-	}
-	if (unlikely(depth > 32)) {
-		error_msg = "too large eh_depth";
 		goto corrupted;
 	}
 	/* Verify checksum on non-root extent tree nodes */
@@ -1758,32 +1722,7 @@ static void ext4_ext_try_to_merge_up(handle_t *handle,
 
 	brelse(path[1].p_bh);
 	ext4_free_blocks(handle, inode, NULL, blk, 1,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET | EXT4_FREE_BLOCKS_RESERVE);
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-			 EXT4_FREE_BLOCKS_RESERVE);
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+			 EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET);
 }
 
 /*
@@ -4518,7 +4457,7 @@ static void ext4_falloc_update_inode(struct inode *inode,
 	 * the file size.
 	 */
 	if (!(mode & FALLOC_FL_KEEP_SIZE)) {
-		if (new_size > i_size_read(inode))
+		if (new_size > i_size_read_uncompressed(inode))
 			i_size_write(inode, new_size);
 		if (new_size > EXT4_I(inode)->i_disksize)
 			ext4_update_i_disksize(inode, new_size);
@@ -4527,7 +4466,7 @@ static void ext4_falloc_update_inode(struct inode *inode,
 		 * Mark that we allocate beyond EOF so the subsequent truncate
 		 * can proceed even if the new size is the same as i_size.
 		 */
-		if (new_size > i_size_read(inode))
+		if (new_size > i_size_read_uncompressed(inode))
 			ext4_set_inode_flag(inode, EXT4_INODE_EOFBLOCKS);
 	}
 

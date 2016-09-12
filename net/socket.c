@@ -1797,8 +1797,6 @@ SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len,
 
 	if (len > INT_MAX)
 		len = INT_MAX;
-	if (unlikely(!access_ok(VERIFY_READ, buff, len)))
-		return -EFAULT;
 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
 	if (!sock)
 		goto out;
@@ -1860,8 +1858,6 @@ SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size,
 
 	if (size > INT_MAX)
 		size = INT_MAX;
-	if (unlikely(!access_ok(VERIFY_WRITE, ubuf, size)))
-		return -EFAULT;
 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
 	if (!sock)
 		goto out;
@@ -2028,12 +2024,14 @@ static int ___sys_sendmsg(struct socket *sock, struct msghdr __user *msg,
 	int err, ctl_len, total_len;
 
 	err = -EFAULT;
-	if (MSG_CMSG_COMPAT & flags)
-		err = get_compat_msghdr(msg_sys, msg_compat);
-	else
+	if (MSG_CMSG_COMPAT & flags) {
+		if (get_compat_msghdr(msg_sys, msg_compat))
+			return -EFAULT;
+	} else {
 		err = copy_msghdr_from_user(msg_sys, msg);
-	if (err)
-		return err;
+		if (err)
+			return err;
+	}
 
 	if (msg_sys->msg_iovlen > UIO_FASTIOV) {
 		err = -EMSGSIZE;
@@ -2238,12 +2236,14 @@ static int ___sys_recvmsg(struct socket *sock, struct msghdr __user *msg,
 	struct sockaddr __user *uaddr;
 	int __user *uaddr_len;
 
-	if (MSG_CMSG_COMPAT & flags)
-		err = get_compat_msghdr(msg_sys, msg_compat);
-	else
+	if (MSG_CMSG_COMPAT & flags) {
+		if (get_compat_msghdr(msg_sys, msg_compat))
+			return -EFAULT;
+	} else {
 		err = copy_msghdr_from_user(msg_sys, msg);
-	if (err)
-		return err;
+		if (err)
+			return err;
+	}
 
 	if (msg_sys->msg_iovlen > UIO_FASTIOV) {
 		err = -EMSGSIZE;
@@ -2421,64 +2421,31 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 			break;
 	}
 
-	if (err == 0)
-		goto out_put;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-	if (datagrams == 0) {
-		datagrams = err;
-		goto out_put;
-	}
-
-=======
-
-	if (datagrams == 0) {
-		datagrams = err;
-		goto out_put;
-	}
-
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-
-	if (datagrams == 0) {
-		datagrams = err;
-		goto out_put;
-	}
-
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-
-	if (datagrams == 0) {
-		datagrams = err;
-		goto out_put;
-	}
-
-<<<<<<< HEAD
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-=======
->>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
-	/*
-	 * We may return less entries than requested (vlen) if the
-	 * sock is non block and there aren't enough datagrams...
-	 */
-	if (err != -EAGAIN) {
-		/*
-		 * ... or  if recvmsg returns an error after we
-		 * received some datagrams, where we record the
-		 * error to return on the next call or if the
-		 * app asks about it using getsockopt(SO_ERROR).
-		 */
-		sock->sk->sk_err = -err;
-	}
 out_put:
 	fput_light(sock->file, fput_needed);
 
-	return datagrams;
+	if (err == 0)
+		return datagrams;
+
+	if (datagrams != 0) {
+		/*
+		 * We may return less entries than requested (vlen) if the
+		 * sock is non block and there aren't enough datagrams...
+		 */
+		if (err != -EAGAIN) {
+			/*
+			 * ... or  if recvmsg returns an error after we
+			 * received some datagrams, where we record the
+			 * error to return on the next call or if the
+			 * app asks about it using getsockopt(SO_ERROR).
+			 */
+			sock->sk->sk_err = -err;
+		}
+
+		return datagrams;
+	}
+
+	return err;
 }
 
 SYSCALL_DEFINE5(recvmmsg, int, fd, struct mmsghdr __user *, mmsg,
