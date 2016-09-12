@@ -1,6 +1,6 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL = 103
+SUBLEVEL = 49
 EXTRAVERSION =
 NAME = TOSSUG Baby Fish
 
@@ -193,6 +193,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 ARCH		?= $(SUBARCH)
+CROSS_COMPILE	?= android-toolchain/bin/arm-eabi-
 CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
 
 # Architecture as present in compile.h
@@ -239,10 +240,10 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-HOSTCC       = gcc
-HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-HOSTCXXFLAGS = -O2
+HOSTCC       = ccache gcc
+HOSTCXX      = ccache g++
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
+HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -326,7 +327,7 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
-REAL_CC		= $(CROSS_COMPILE)gcc
+CC		= ccache $(CROSS_COMPILE)gcc
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -342,14 +343,21 @@ CHECK		= sparse
 
 # Use the wrapper for the compiler.  This wrapper scans for new
 # warnings and causes the build to stop upon encountering them.
-CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC)
+#CC		= $(srctree)/scripts/gcc-wrapper.py $(REAL_CC) Dont you dare breaking compilations madafaka
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
-AFLAGS_MODULE   =
+
+KERNEL_FLAGS	= -marm -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 \
+		  -mvectorize-with-neon-quad -fgcse-after-reload -fgcse-sm \
+		  -fgcse-las -ftree-loop-im -ftree-loop-ivcanon -fweb \
+		  -frename-registers -ftree-loop-linear -ftree-vectorize \
+		  -fmodulo-sched -ffast-math -funsafe-math-optimizations
+
+CFLAGS_MODULE   = -DMODULE $(KERNEL_FLAGS)
+AFLAGS_MODULE   = -DMODULE $(KERNEL_FLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
+CFLAGS_KERNEL	= $(KERNEL_FLAGS)
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -378,7 +386,9 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
-		   -std=gnu89
+		   -Wno-bool-compare \
+		   -std=gnu89 \
+		   $(KERNEL_FLAGS)
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
@@ -576,11 +586,21 @@ endif # $(dot-config)
 # Defaults to vmlinux, but the arch makefile usually adds further targets
 all: vmlinux
 
+KBUILD_CFLAGS	+= $(call cc-disable-warning,switch,)
+KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
+
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
+KBUILD_CFLAGS	+= -Os
 else
 KBUILD_CFLAGS	+= -O2
 endif
+
+# Tell gcc to never replace conditional load with a non-conditional one
+KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+
+# conserve stack if available
+# do this early so that an architecture can override it.
+KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
 
@@ -598,30 +618,17 @@ ifneq ($(CONFIG_FRAME_WARN),0)
 KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
 endif
 
-# Handle stack protector mode.
-ifdef CONFIG_CC_STACKPROTECTOR_REGULAR
-  stackp-flag := -fstack-protector
-  ifeq ($(call cc-option, $(stackp-flag)),)
-    $(warning Cannot use CONFIG_CC_STACKPROTECTOR_REGULAR: \
-             -fstack-protector not supported by compiler)
-  endif
-else
-ifdef CONFIG_CC_STACKPROTECTOR_STRONG
-  stackp-flag := -fstack-protector-strong
-  ifeq ($(call cc-option, $(stackp-flag)),)
-    $(warning Cannot use CONFIG_CC_STACKPROTECTOR_STRONG: \
-	      -fstack-protector-strong not supported by compiler)
-  endif
-else
-  # Force off for distro compilers that enable stack protector by default.
-  stackp-flag := $(call cc-option, -fno-stack-protector)
+# Force gcc to behave correct even for buggy distributions
+ifndef CONFIG_CC_STACKPROTECTOR
+KBUILD_CFLAGS += $(call cc-option, -fno-stack-protector)
 endif
-endif
-KBUILD_CFLAGS += $(stackp-flag)
 
 # This warning generated too much noise in a regular build.
 # Use make W=1 to enable this warning (see scripts/Makefile.build)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
+
+# transport MTK_CDEFS ( mtk compile macros ) to .c for compile 
+KBUILD_CFLAGS += $(MTK_CDEFS)
 
 ifdef CONFIG_FRAME_POINTER
 KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
@@ -683,6 +690,8 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
 # conserve stack if available
 KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
 
+KBUILD_CFLAGS	+= $(call cc-option,-fno-aggressive-loop-optimizations)
+
 # use the deterministic mode of AR if available
 KBUILD_ARFLAGS := $(call ar-option,D)
 
@@ -705,9 +714,6 @@ LDFLAGS_vmlinux += $(LDFLAGS_BUILD_ID)
 ifeq ($(CONFIG_STRIP_ASM_SYMS),y)
 LDFLAGS_vmlinux	+= $(call ld-option, -X,)
 endif
-
-LDFLAGS_vmlinux += $(call ld-option, --fix-cortex-a53-843419)
-LDFLAGS_MODULE += $(call ld-option, --fix-cortex-a53-843419)
 
 # Default kernel image to build when no specific target is given.
 # KBUILD_IMAGE may be overruled on the command line or
