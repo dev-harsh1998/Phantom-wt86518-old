@@ -559,9 +559,7 @@ static inline void init_hrtick(void)
 #endif	/* CONFIG_SCHED_HRTICK */
 
 /*
-<<<<<<< HEAD
  * resched_task - mark a task 'to be rescheduled now'.
-=======
  * cmpxchg based fetch_or, macro so it works for different integer types
  */
 #define fetch_or(ptr, val)						\
@@ -596,7 +594,6 @@ static bool set_nr_and_not_polling(struct task_struct *p)
 
 /*
  * resched_curr - mark rq's current task 'to be rescheduled now'.
->>>>>>> 287d93b... sched/idle: Avoid spurious wakeup IPIs
  *
  * On UP this means the setting of the need_resched flag, on SMP it
  * might also involve a cross-CPU call to trigger the scheduler on
