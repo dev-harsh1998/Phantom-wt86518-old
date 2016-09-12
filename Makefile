@@ -1,6 +1,6 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL = 103
+SUBLEVEL = 49
 EXTRAVERSION =
 NAME = TOSSUG Baby Fish
 
@@ -240,7 +240,6 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	  else if [ -x /bin/bash ]; then echo /bin/bash; \
 	  else echo sh; fi ; fi)
 
-<<<<<<< HEAD
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
 <<<<<<< HEAD
@@ -257,6 +256,7 @@ HOSTCXXFLAGS = -O3 -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-
 =======
 HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
 HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
+<<<<<<< HEAD
 =======
 >>>>>>> parent of fde6d09... upstream chutiyapa
 HOSTCC       = gcc
@@ -276,6 +276,8 @@ HOSTCXXFLAGS = -O2
 =======
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 >>>>>>> parent of fde6d09... upstream chutiyapa
+=======
+>>>>>>> parent of 00b655e... 3.10.103
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -432,10 +434,10 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 =======
 >>>>>>> parent of 8242e4d... upstream chutiyapa 2
 		   -fno-delete-null-pointer-checks \
-<<<<<<< HEAD
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -457,6 +459,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -std=gnu89
 >>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
 >>>>>>> parent of fde6d09... upstream chutiyapa
+=======
+>>>>>>> parent of 00b655e... 3.10.103
 
 >>>>>>> parent of eeb25a1... fix merge conflict
 KBUILD_AFLAGS_KERNEL :=
