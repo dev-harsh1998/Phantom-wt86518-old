@@ -136,12 +136,9 @@ choice
 		  any workload. It also tries to guarantee low latency to
 		  interactive and soft real-time applications.
 
-<<<<<<< HEAD
-=======
 	config DEFAULT_FIOPS
 		bool "FIOPS" if IOSCHED_FIOPS=y
 
->>>>>>> 9f18d9d... block: fiops ioscheduler core
 	config DEFAULT_NOOP
 		bool "No-op"
 
