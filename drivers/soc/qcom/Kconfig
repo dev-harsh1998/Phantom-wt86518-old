@@ -561,12 +561,10 @@ config MSM_PERFORMANCE
 	  It ensures that no more than a user specified number of CPUs stay
 	  online at any given point in time.
 
-<<<<<<< HEAD
-=======
 config MSM_PERFORMANCE_HOTPLUG_ON
         bool "Hotplug functionality through msm_performance turned on"
         depends on MSM_PERFORMANCE
-        default y
+        default n
         help
 	  If some other core-control driver is present turn off the core-control
 	  capability of msm_performance driver. Setting this flag to false will
@@ -591,18 +589,5 @@ config MSM_CPU_FREQ_MIN
 	default 400000
 
 endif # CPU_FREQ_MSM
-
-config SERIAL_NUM
-	bool "Enable Serial Number Proc Interface"
-	help
-	  Provide a interface for reading CPU serial number
-
-config SECBOOT_FUSE
-	bool "Enable Secure boot fuse Proc Interface"
-	help
-	  Provide a interface for reading CPU secure boot fuse setting
-
->>>>>>> 78769d4... soc: qcom: Add back MSM_CPU_FREQ_SET_MIN_MAX
-source "drivers/soc/qcom/memshare/Kconfig"
 
 endif # ARCH_MSM
