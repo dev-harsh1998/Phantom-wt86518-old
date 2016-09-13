@@ -540,8 +540,6 @@ config BALANCE_ANON_FILE_RECLAIM
 
 config GENERIC_EARLY_IOREMAP
 	bool
-<<<<<<< HEAD
-=======
 
 config PROCESS_RECLAIM
 	bool "Enable process reclaim"
@@ -583,4 +581,4 @@ config PGTABLE_MAPPING
 
 	  You can check speed with zsmalloc benchmark[1].
 	  [1] https://github.com/spartacus06/zsmalloc
->>>>>>> 86f43e7... mm: zsmalloc: backport from Linux 4.1
+
