@@ -678,8 +678,13 @@ int sync_fence_wait(struct sync_fence *fence, long timeout)
 		return err;
 
 	if (fence->status < 0) {
+<<<<<<< HEAD
+		pr_info("fence error %d on [%p]\n", fence->status, fence);
+		sync_fence_log(fence);
+=======
 		pr_info("fence error %d on [%pK]\n", fence->status, fence);
 		_sync_fence_log(fence, true);
+>>>>>>> 3c09a61... staging: android: Change %p to %pK in debug messages
 		return fence->status;
 	}
 
