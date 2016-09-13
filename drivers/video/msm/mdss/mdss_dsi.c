@@ -25,14 +25,9 @@
 #include <linux/clk.h>
 #include <linux/pm_qos.h>
 #include <linux/lcd_notify.h>
-<<<<<<< HEAD
-=======
-
 #ifdef CONFIG_STATE_NOTIFIER
 #include <linux/state_notifier.h>
 #endif
-
->>>>>>> f526dcb... msm: Import state notifier driver
 #include "mdss.h"
 #include "mdss_panel.h"
 #include "mdss_dsi.h"
@@ -1297,13 +1292,10 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 			rc = mdss_dsi_unblank(pdata);
 		lcd_notifier_call_chain(LCD_EVENT_ON_END, NULL);
 		pdata->panel_info.esd_rdy = true;
-<<<<<<< HEAD
 		Packet_PLAG=0;
-=======
 #ifdef CONFIG_STATE_NOTIFIER
 		state_resume();
 #endif
->>>>>>> f526dcb... msm: Import state notifier driver
 		break;
 	case MDSS_EVENT_BLANK:
 		lcd_notifier_call_chain(LCD_EVENT_OFF_START, NULL);
@@ -1317,16 +1309,13 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 		ctrl_pdata->ctrl_state &= ~CTRL_STATE_MDP_ACTIVE;
 		if (ctrl_pdata->off_cmds.link_state == DSI_LP_MODE)
 			rc = mdss_dsi_blank(pdata, power_state);
-<<<<<<< HEAD
 		rc = mdss_dsi_off(pdata, power_state);
 		lcd_notifier_call_chain(LCD_EVENT_OFF_END, NULL);
-=======
 		if (!(pdata->panel_info.mipi.always_on))
 			rc = mdss_dsi_off(pdata, power_state);
 #ifdef CONFIG_STATE_NOTIFIER
 		state_suspend();
 #endif
->>>>>>> f526dcb... msm: Import state notifier driver
 		break;
 	case MDSS_EVENT_CONT_SPLASH_FINISH:
 		if (ctrl_pdata->off_cmds.link_state == DSI_LP_MODE)
