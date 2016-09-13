@@ -31,10 +31,13 @@
 #include <linux/idr.h>
 #include <linux/sysfs.h>
 #include <linux/ratelimit.h>
+<<<<<<< HEAD
 #include <linux/show_mem_notifier.h>
 #ifdef CONFIG_STATE_NOTIFIER
 #include <linux/state_notifier.h>
 #endif
+=======
+>>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 
 #include "zram_drv.h"
 
@@ -43,11 +46,12 @@ static DEFINE_IDR(zram_index_idr);
 static DEFINE_MUTEX(zram_index_mutex);
 
 static int zram_major;
+<<<<<<< HEAD
 #ifdef CONFIG_ZRAM_LZ4_COMPRESS
+=======
+static struct zram *zram_devices;
+>>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 static const char *default_compressor = "lz4";
-#else
-static const char *default_compressor = "lzo";
-#endif
 
 /*
  * We don't need to see memory allocation errors more than once every 1
@@ -58,15 +62,28 @@ static const char *default_compressor = "lzo";
 /* Module params (documentation at end) */
 static unsigned int num_devices = 1;
 
+<<<<<<< HEAD
 #ifdef CONFIG_STATE_NOTIFIER
 static struct notifier_block notif;
 #endif
+=======
+static inline void deprecated_attr_warn(const char *name)
+{
+	pr_warn_once("%d (%s) Attribute %s (and others) will be removed. %s\n",
+			task_pid_nr(current),
+			current->comm,
+			name,
+			"See zram documentation.");
+}
+>>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 
 #define ZRAM_ATTR_RO(name)						\
 static ssize_t name##_show(struct device *d,				\
 				struct device_attribute *attr, char *b)	\
 {									\
 	struct zram *zram = dev_to_zram(d);				\
+									\
+	deprecated_attr_warn(__stringify(name));			\
 	return scnprintf(b, PAGE_SIZE, "%llu\n",			\
 		(u64)atomic64_read(&zram->stats.name));			\
 }									\
@@ -77,6 +94,7 @@ static inline bool init_done(struct zram *zram)
 	return zram->disksize;
 }
 
+<<<<<<< HEAD
 static void zram_show_mem(struct zram *zram)
 {
 	if (!down_read_trylock(&zram->init_lock))
@@ -122,6 +140,8 @@ static struct notifier_block zram_show_mem_notifier_block = {
 	.notifier_call = zram_show_mem_notifier
 };
 
+=======
+>>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 static inline struct zram *dev_to_zram(struct device *dev)
 {
 	return (struct zram *)dev_to_disk(dev)->private_data;
@@ -266,6 +286,7 @@ static ssize_t orig_data_size_show(struct device *dev,
 {
 	struct zram *zram = dev_to_zram(dev);
 
+	deprecated_attr_warn("orig_data_size");
 	return scnprintf(buf, PAGE_SIZE, "%llu\n",
 		(u64)(atomic64_read(&zram->stats.pages_stored)) << PAGE_SHIFT);
 }
@@ -276,6 +297,7 @@ static ssize_t mem_used_total_show(struct device *dev,
 	u64 val = 0;
 	struct zram *zram = dev_to_zram(dev);
 
+	deprecated_attr_warn("mem_used_total");
 	down_read(&zram->init_lock);
 	if (init_done(zram)) {
 		struct zram_meta *meta = zram->meta;
@@ -292,6 +314,7 @@ static ssize_t mem_limit_show(struct device *dev,
 	u64 val;
 	struct zram *zram = dev_to_zram(dev);
 
+	deprecated_attr_warn("mem_limit");
 	down_read(&zram->init_lock);
 	val = zram->limit_pages;
 	up_read(&zram->init_lock);
@@ -323,6 +346,7 @@ static ssize_t mem_used_max_show(struct device *dev,
 	u64 val = 0;
 	struct zram *zram = dev_to_zram(dev);
 
+	deprecated_attr_warn("mem_used_max");
 	down_read(&zram->init_lock);
 	if (init_done(zram))
 		val = atomic_long_read(&zram->stats.max_used_pages);
@@ -1288,7 +1312,6 @@ static int zram_add(void)
 	zram->disk->private_data = zram;
 	snprintf(zram->disk->disk_name, 16, "zram%d", device_id);
 
-	__set_bit(QUEUE_FLAG_FAST, &zram->disk->queue->queue_flags);
 	/* Actual capacity set using syfs (/sys/block/zram<id>/disksize */
 	set_capacity(zram->disk, 0);
 	/* zram devices sort of resembles non-rotational disks */
@@ -1486,12 +1509,16 @@ static int __init zram_init(void)
 		num_devices--;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_STATE_NOTIFIER
 	notif.notifier_call = state_notifier_callback;
 	if (state_register_client(&notif))
 		pr_warn("Failed to register State notifier callback\n");
 #endif
 	show_mem_notifier_register(&zram_show_mem_notifier_block);
+=======
+	pr_info("Created %u device(s)\n", num_devices);
+>>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 	return 0;
 
 out_error:
