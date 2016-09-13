@@ -584,8 +584,6 @@ config PGTABLE_MAPPING
 	  You can check speed with zsmalloc benchmark[1].
 	  [1] https://github.com/spartacus06/zsmalloc
 
-<<<<<<< HEAD
-=======
 config ZPOOL
 	tristate "Common API for compressed memory storage"
 	default n
@@ -602,4 +600,4 @@ config ZBUD
 	  page.  While this design limits storage density, it has simple and
 	  deterministic reclaim properties that make it preferable to a higher
 	  density approach when reclaim will be used.
->>>>>>> e6ad1b4... mm/zpool: implement common zpool api to zbud/zsmalloc
+
