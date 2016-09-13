@@ -242,8 +242,42 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
+<<<<<<< HEAD
+<<<<<<< HEAD
 HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
 HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
+=======
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
+HOSTCXXFLAGS = -O3 -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of eeb25a1... fix merge conflict
+=======
+=======
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe -std=gnu89
+HOSTCXXFLAGS = -Ofast -fgcse-las -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -pipe
+<<<<<<< HEAD
+=======
+>>>>>>> parent of fde6d09... upstream chutiyapa
+HOSTCC       = gcc
+HOSTCXX      = g++
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
+HOSTCXXFLAGS = -O2
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of b6f6e89... delete gcc 4 debries
+=======
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+>>>>>>> parent of eeb25a1... fix merge conflict
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
+=======
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+>>>>>>> parent of fde6d09... upstream chutiyapa
+=======
+>>>>>>> parent of 00b655e... 3.10.103
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -327,7 +361,15 @@ include $(srctree)/scripts/Kbuild.include
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
+<<<<<<< HEAD
+<<<<<<< HEAD
 CC		= ccache $(CROSS_COMPILE)gcc
+=======
+REAL_CC		= ccache $(CROSS_COMPILE)gcc
+>>>>>>> parent of eeb25a1... fix merge conflict
+=======
+CC		= ccache $(CROSS_COMPILE)gcc
+>>>>>>> parent of fde6d09... upstream chutiyapa
 CPP		= $(CC) -E
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -385,11 +427,42 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
 		   -fno-delete-null-pointer-checks \
 		   -Wno-bool-compare \
 		   -std=gnu89 \
 		   $(KERNEL_FLAGS)
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+		   -fno-delete-null-pointer-checks
+>>>>>>> parent of b6f6e89... delete gcc 4 debries
+=======
+		   -fno-delete-null-pointer-checks
+>>>>>>> parent of b6f6e89... delete gcc 4 debries
+=======
+		   -fno-delete-null-pointer-checks \
+		   -Wno-bool-compare \
+		   -std=gnu89 \
+		   $(KERNEL_FLAGS)
+=======
+>>>>>>> parent of 8242e4d... upstream chutiyapa 2
+=======
+=======
+		   -std=gnu89
+>>>>>>> d67475c... Update Linux Base Version (3.10.49--->3.10.103)
+>>>>>>> parent of fde6d09... upstream chutiyapa
+=======
+>>>>>>> parent of 00b655e... 3.10.103
+
+>>>>>>> parent of eeb25a1... fix merge conflict
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
