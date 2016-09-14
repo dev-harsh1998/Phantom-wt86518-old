@@ -31,14 +31,10 @@
 #include <linux/idr.h>
 #include <linux/sysfs.h>
 #include <linux/ratelimit.h>
-<<<<<<< HEAD
 #include <linux/show_mem_notifier.h>
 #ifdef CONFIG_STATE_NOTIFIER
 #include <linux/state_notifier.h>
 #endif
-=======
->>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
-
 #include "zram_drv.h"
 
 static DEFINE_IDR(zram_index_idr);
@@ -46,11 +42,7 @@ static DEFINE_IDR(zram_index_idr);
 static DEFINE_MUTEX(zram_index_mutex);
 
 static int zram_major;
-<<<<<<< HEAD
-#ifdef CONFIG_ZRAM_LZ4_COMPRESS
-=======
 static struct zram *zram_devices;
->>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 static const char *default_compressor = "lz4";
 
 /*
@@ -62,11 +54,9 @@ static const char *default_compressor = "lz4";
 /* Module params (documentation at end) */
 static unsigned int num_devices = 1;
 
-<<<<<<< HEAD
 #ifdef CONFIG_STATE_NOTIFIER
 static struct notifier_block notif;
 #endif
-=======
 static inline void deprecated_attr_warn(const char *name)
 {
 	pr_warn_once("%d (%s) Attribute %s (and others) will be removed. %s\n",
@@ -75,7 +65,6 @@ static inline void deprecated_attr_warn(const char *name)
 			name,
 			"See zram documentation.");
 }
->>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 
 #define ZRAM_ATTR_RO(name)						\
 static ssize_t name##_show(struct device *d,				\
@@ -94,7 +83,6 @@ static inline bool init_done(struct zram *zram)
 	return zram->disksize;
 }
 
-<<<<<<< HEAD
 static void zram_show_mem(struct zram *zram)
 {
 	if (!down_read_trylock(&zram->init_lock))
@@ -140,8 +128,6 @@ static struct notifier_block zram_show_mem_notifier_block = {
 	.notifier_call = zram_show_mem_notifier
 };
 
-=======
->>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 static inline struct zram *dev_to_zram(struct device *dev)
 {
 	return (struct zram *)dev_to_disk(dev)->private_data;
@@ -438,12 +424,9 @@ static ssize_t comp_algorithm_store(struct device *dev,
 	struct zram *zram = dev_to_zram(dev);
 	size_t sz;
 
-<<<<<<< HEAD
 	if (!zcomp_available_algorithm(buf))
 		return -EINVAL;
 
-=======
->>>>>>> dc2a0f4... zram: cut trailing newline in algorithm name
 	down_write(&zram->init_lock);
 	if (init_done(zram)) {
 		up_write(&zram->init_lock);
@@ -1509,16 +1492,13 @@ static int __init zram_init(void)
 		num_devices--;
 	}
 
-<<<<<<< HEAD
 #ifdef CONFIG_STATE_NOTIFIER
 	notif.notifier_call = state_notifier_callback;
 	if (state_register_client(&notif))
 		pr_warn("Failed to register State notifier callback\n");
 #endif
 	show_mem_notifier_register(&zram_show_mem_notifier_block);
-=======
 	pr_info("Created %u device(s)\n", num_devices);
->>>>>>> parent of 3e01364... zram: Add back show_mem_notifier and QUEUE_FAST_FLAG
 	return 0;
 
 out_error:
