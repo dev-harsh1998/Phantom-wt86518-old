@@ -1,4 +1,4 @@
-#
+# ok
 # Kbuild for top-level directory of the kernel
 # This file takes care of the following:
 # 1) Generate bounds.h
