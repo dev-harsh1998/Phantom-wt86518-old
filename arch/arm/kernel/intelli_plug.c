@@ -2,7 +2,7 @@
  * Author: Paul Reioux aka Faux123 <reioux@gmail.com>
  *
  * Copyright 2012~2014 Paul Reioux
- *
+ * Editor dev_harsh1998 (ADAPTATIONS FOR WT86518
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
