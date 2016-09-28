@@ -312,7 +312,7 @@ config SUSPEND_TIME
 config PM_SYNC_BEFORE_SUSPEND
 	bool "Sync file systems before suspend"
 	depends on PM
-	default n
+	default y
 
 config QUICK_WAKEUP
 	bool "Quick wakeup"
