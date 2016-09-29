@@ -41,27 +41,12 @@
 			label = "peripheral_mem";
 		};
 
-<<<<<<< HEAD
-=======
 		hardboot_mem: hardboot_region@0 {
 			linux,reserve-contiguous-region;
 			linux,reserve-region;
 			linux,remove-completely;
 			reg = <0x0 0x8c300000 0x0 0x0100000>;
 			label = "hardboot_mem";
-		};
-
-		mba_mem: mba_region@0 {
-			linux,reserve-contiguous-region;
-			reg = <0 0 0 0x0200000>;
-			label = "mba_mem";
-		};
-
->>>>>>> d8fb7e0... kexec: Initial Kexec Support
-		secure_mem: secure_region@0 {
-			linux,reserve-contiguous-region;
-			reg = <0 0 0 0x6D00000>;
-			label = "secure_mem";
 		};
 
 		venus_qseecom_mem: venus_qseecom_region@0 {
