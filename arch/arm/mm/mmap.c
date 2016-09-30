@@ -175,7 +175,11 @@ void arch_pick_mmap_layout(struct mm_struct *mm)
 
 	if ((current->flags & PF_RANDOMIZE) &&
 	    !(current->personality & ADDR_NO_RANDOMIZE))
+<<<<<<< HEAD
 		random_factor = (get_random_int() & ((1 << mmap_rnd_bits) - 1)) << PAGE_SHIFT;
+=======
+		random_factor = (get_random_long() & ((1UL << mmap_rnd_bits) - 1)) << PAGE_SHIFT;
+>>>>>>> 3f53d09... Bring up N kernel, patch from Gerrit
 
 	if (mmap_is_legacy()) {
 		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
