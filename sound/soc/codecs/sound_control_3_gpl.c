@@ -27,7 +27,7 @@
 #define SOUND_CONTROL_MAJOR_VERSION	3
 #define SOUND_CONTROL_MINOR_VERSION	4
 
-#define REG_SZ	7
+#define REG_SZ	21
 
 extern struct snd_soc_codec *fauxsound_codec_ptr;
 
@@ -38,7 +38,9 @@ int msm8x16_wcd_write(struct snd_soc_codec *codec, unsigned int reg,
 		unsigned int value);
 
 
-static unsigned int cached_regs[] = {6, 6, 0, 0, 0, 0, 0};
+static unsigned int cached_regs[] = {6, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+			    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			    0 };
 
 static unsigned int *cache_select(unsigned int reg)
 {
@@ -54,19 +56,19 @@ static unsigned int *cache_select(unsigned int reg)
 			break;
 */
                 case MSM8X16_WCD_A_CDC_RX1_VOL_CTL_B2_CTL:
-			out = &cached_regs[2];
-			break;
-                case MSM8X16_WCD_A_CDC_RX2_VOL_CTL_B2_CTL:
-			out = &cached_regs[3];
-			break;
-                case MSM8X16_WCD_A_CDC_RX3_VOL_CTL_B2_CTL:
 			out = &cached_regs[4];
 			break;
-                case MSM8X16_WCD_A_CDC_TX1_VOL_CTL_GAIN:
+                case MSM8X16_WCD_A_CDC_RX2_VOL_CTL_B2_CTL:
 			out = &cached_regs[5];
 			break;
-                case MSM8X16_WCD_A_CDC_TX2_VOL_CTL_GAIN:
+                case MSM8X16_WCD_A_CDC_RX3_VOL_CTL_B2_CTL:
 			out = &cached_regs[6];
+			break;
+                case MSM8X16_WCD_A_CDC_TX1_VOL_CTL_GAIN:
+			out = &cached_regs[11];
+			break;
+                case MSM8X16_WCD_A_CDC_TX2_VOL_CTL_GAIN:
+			out = &cached_regs[12];
 			break;
         }
 	return out;
