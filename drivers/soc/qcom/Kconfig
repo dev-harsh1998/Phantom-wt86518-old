@@ -555,6 +555,7 @@ config MSM_CORE_CTL_HELPER
 	  max online CPUs from userspace.
 
 config MSM_PERFORMANCE
+	default n
 	tristate "Core control driver to support userspace hotplug requests"
 	help
 	  This driver is used to provide CPU hotplug support to userspace.
@@ -582,7 +583,7 @@ config MSM_CPU_FREQ_SET_MIN_MAX
 config MSM_CPU_FREQ_MAX
 	int "Max CPU Frequency"
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
-	default 1363200
+	default 1209600
 
 config MSM_CPU_FREQ_MIN
 	int "Min CPU Frequency"
