@@ -18,7 +18,7 @@
 			regulator-name = "8916_s2";
 			reg = <0x1700 0x100>;
 			regulator-min-microvolt = <1050000>;
-			regulator-max-microvolt = <1400000>;
+			regulator-max-microvolt = <1390000>;
 		};
 	};
 };
@@ -52,7 +52,7 @@
 		regulator-min-microvolt = <1>;
 		regulator-max-microvolt = <18>;
 
-		qcom,cpr-voltage-ceiling = <1050000 1150000 1400000>;
+		qcom,cpr-voltage-ceiling = <1050000 1150000 1390000>;
 		qcom,cpr-voltage-floor = <1050000 1150000 1275000>;
 		vdd-apc-supply = <&pm8916_s2>;
 
@@ -85,7 +85,7 @@
 					<27 36 6 0>,
 					<27 18 6 0>,
 					<27 0 6 0>;
-		qcom,cpr-init-voltage-ref = <1050000 1150000 1400000>;
+		qcom,cpr-init-voltage-ref = <1050000 1150000 1390000>;
 		qcom,cpr-init-voltage-step = <10000>;
 		qcom,cpr-corner-map = <1 1 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3>;
 		qcom,cpr-corner-frequency-map =

@@ -47,7 +47,7 @@ struct notifier_block lcd_worker;
 static int sampling_time = DEF_SAMPLING_MS;
 static int load_threshold = CPU_LOAD_THRESHOLD;
 
-static int tplug_hp_enabled = 1;
+static int tplug_hp_enabled = 0;
 
 static int touch_boost_enabled = 0;
 

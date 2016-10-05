@@ -44,15 +44,14 @@ static struct delayed_work intelli_plug_boost;
 static struct workqueue_struct *intelliplug_wq;
 static struct workqueue_struct *intelliplug_boost_wq;
 
-static unsigned int intelli_plug_active = 0;
+static unsigned int intelli_plug_active = 1;
 
-static unsigned int touch_boost_active = 1;
-module_param(touch_boost_active, uint, 0664);
+static unsigned int touch_boost_active = 0;
 
-static unsigned int nr_run_profile_sel = 0;
+static unsigned int nr_run_profile_sel = 1;
 module_param(nr_run_profile_sel, uint, 0664);
 
-static unsigned int min_online_cpus = 2;
+static unsigned int min_online_cpus = 1;
 module_param(min_online_cpus, uint, 0664);
 
 //default to something sane rather than zero
