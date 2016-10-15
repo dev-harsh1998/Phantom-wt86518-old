@@ -21,7 +21,7 @@
 #include <linux/leds.h>
 #include <linux/qpnp/pwm.h>
 #include <linux/err.h>
-
+#include <linux/display_state.h> // <- Lets Query Status Of panel
 #include "mdss_dsi.h"
 #include <linux/hardware_info.h> //req  wuzhenzhen.wt 20140924 add for hardware info
 
@@ -36,6 +36,13 @@
 #define MIN_REFRESH_RATE 30
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
+
+bool display_on = true;
+
+bool is_display_on(void)
+{
+	return display_on;
+}
 
 extern bool is_Lcm_Present;//heming@wingtech.com,20140730, disable lcm backlight when lcm is not connected
 
@@ -607,6 +614,8 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+	display_on = true; //<- True that display is on this time :)
+
 	pinfo = &pdata->panel_info;
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
@@ -650,6 +659,8 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 
 	if (ctrl->off_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
+
+	display_on = false; //<- This Says Display is off :)
 
 end:
 	pinfo->blank_state = MDSS_PANEL_BLANK_BLANK;
