@@ -1729,8 +1729,8 @@ sk_dst_get(struct sock *sk)
 
 	rcu_read_lock();
 	dst = rcu_dereference(sk->sk_dst_cache);
-	if (dst && !atomic_inc_not_zero(&dst->__refcnt))
-		dst = NULL;
+	if (dst)
+		dst_hold(dst);
 	rcu_read_unlock();
 	return dst;
 }
