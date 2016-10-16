@@ -474,6 +474,14 @@ static int mark_source_chains(const struct xt_table_info *newinfo,
 	return 1;
 }
 
+static inline int check_entry(const struct arpt_entry *e)
+{
+	if (!arp_checkentry(&e->arp))
+		return -EINVAL;
+
+	return xt_check_entry_offsets(e, e->target_offset, e->next_offset);
+}
+
 static inline int check_target(struct arpt_entry *e, const char *name)
 {
 	struct xt_entry_target *t = arpt_get_target(e);
@@ -563,10 +571,7 @@ static inline int check_entry_size_and_hooks(struct arpt_entry *e,
 		return -EINVAL;
 	}
 
-	if (!arp_checkentry(&e->arp))
-		return -EINVAL;
-
-	err = xt_check_entry_offsets(e, e->target_offset, e->next_offset);
+	err = check_entry(e);
 	if (err)
 		return err;
 
@@ -1225,10 +1230,8 @@ check_compat_entry_size_and_hooks(struct compat_arpt_entry *e,
 		return -EINVAL;
 	}
 
-	if (!arp_checkentry(&e->arp))
-		return -EINVAL;
-
-	ret = xt_check_entry_offsets(e, e->target_offset, e->next_offset);
+	/* For purposes of check_entry casting the compat entry is fine */
+	ret = check_entry((struct arpt_entry *)e);
 	if (ret)
 		return ret;
 
