@@ -973,13 +973,15 @@ static int mdss_mdp_set_threshold_max_bandwidth(struct mdss_mdp_ctl *ctl)
 	pr_debug("final mode = %d, bw_mode_bitmap = %d\n", mode,
 			ctl->mdata->bw_mode_bitmap);
 
-	/* Return minimum bandwidth limit */
-	for (i = 0; i < ctl->mdata->max_bw_settings_cnt; i++) {
-		if (max_bw_settings[i].mdss_max_bw_mode & mode) {
+	/* Select BW mode with smallest limit */
+	while (mode) {
+		if (mode & BIT(0)) {
 			threshold = max_bw_settings[i].mdss_max_bw_val;
 			if (threshold < max)
 				max = threshold;
 		}
+		mode >>= 1;
+		i++;
 	}
 
 	return max;
