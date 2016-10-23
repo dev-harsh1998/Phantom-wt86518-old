@@ -56,26 +56,6 @@
 #define FT_REG_FW_MIN_VER   0xB2
 #define FT_REG_FW_SUB_MIN_VER   0xB3
 
-/*Firmware vendors*/
-#define VENDOR_O_FILM		0x51
-#define VENDOR_MUTTO		0x53
-#define VENDOR_BIEL		0x3B
-#define VENDOR_WINTEK		0x89
-#define VENDOR_GIS		        0x8F
-
-/*IC name*/
-#define IC_FT5X06               0x55
-#define IC_FT5606               0x08
-#define IC_FT5X16               0x0A
-#define IC_FT6208               0x05
-#define IC_FT6X06               0x06
-#define IC_FT6X36               0x36
-#define IC_FT5336               0x14
-#define IC_FT3316               0x13
-#define IC_FT5436i              0x12
-#define IC_FT5336i              0x11
-
-
 /* power register bits*/
 #define FT_PMODE_ACTIVE     0x00
 #define FT_PMODE_MONITOR    0x01
@@ -267,7 +247,6 @@ struct ft5x06_ts_data
     u8 fw_vendor_id;
 #if defined(CONFIG_FB)
     struct notifier_block fb_notif;
-	struct work_struct fb_notify_work;
 #elif defined(CONFIG_HAS_EARLYSUSPEND)
     struct early_suspend early_suspend;
 #endif
@@ -278,15 +257,13 @@ struct ft5x06_ts_data
 
 //---------------------------------//
 //---------MACRO CONTROL---------//
-#define CTP_IC_TYPE_0 0x12 //lenovo project
-#define CTP_IC_TYPE_1 0x14 //xiaomi project
-
+#define CTP_IC_TYPE 0x12
 #define CTP_SYS_APK_UPDATE 0
 
 #define TPD_AUTO_UPGRADE 1
 #define FTS_PROC_APK_DEBUG 1
 
-#define CTP_CHARGER_DETECT 0
+#define CTP_CHARGER_DETECT 1
 
 #define CTP_PROC_INTERFACE 1
 

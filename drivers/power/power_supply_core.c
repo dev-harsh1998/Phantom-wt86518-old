@@ -256,6 +256,7 @@ EXPORT_SYMBOL(power_supply_set_hi_power_state);
  * @value:	value to be passed to the power_supply
  *
  */
+
 int power_supply_set_low_power_state(struct power_supply *psy, int value)
 {
 	const union power_supply_propval ret = {value, };
@@ -267,6 +268,23 @@ int power_supply_set_low_power_state(struct power_supply *psy, int value)
 }
 EXPORT_SYMBOL(power_supply_set_low_power_state);
 
+int power_supply_get_battery_charge_state(struct power_supply *psy)
+{
+
+	union power_supply_propval ret = {0,};
+
+	if (!psy) {
+		pr_err("Battie Nahi Awat hao\n");
+	}
+
+	if (psy->get_property)
+	{
+		psy->get_property(psy, POWER_SUPPLY_PROP_ONLINE,&ret);		
+	}
+	pr_debug("online:%d\n",ret.intval);
+
+	return ret.intval;
+}
 static int __power_supply_changed_work(struct device *dev, void *data)
 {
 	struct power_supply *psy = (struct power_supply *)data;

@@ -79,7 +79,7 @@ obj-$(CONFIG_TOUCHSCREEN_TPS6507X)	+= tps6507x-ts.o
 ifeq ($(CONFIG_ARM64),y)
 obj-$(CONFIG_TOUCHSCREEN_FT5X06)	+= ft5x06_ts.o focal_mcap_test_lib64.a
 else  # Target is 32-bit.
-obj-$(CONFIG_TOUCHSCREEN_FT5X06)	+= ft5x06_ts.o focal_mcap_test_lib32.a
+obj-$(CONFIG_TOUCHSCREEN_FT5X06)	+= ft5x06_ts.o focal_mcap_test_lib.a
 endif
 
 

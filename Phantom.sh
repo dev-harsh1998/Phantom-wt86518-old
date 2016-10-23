@@ -21,7 +21,7 @@ KERNEL_DIR=$PWD
 KERNEL="zImage"
 ANYKERNEL_DIR="$KERNEL_DIR/arch/arm/boot/AnyKernel2"
 REPACK_DIR="$ANYKERNEL_DIR"
-ZIP_MOVE="$KERNEL_DIR/kernel_out"
+ZIP_MOVE="$KERNEL_DIR"
 KERN_IMG=$KERNEL_DIR/arch/arm/boot/zImage
 DTBTOOL=$KERNEL_DIR/scripts/dtbToolCM
 BASE_VER="PhAnToM"
@@ -35,13 +35,13 @@ green='\033[01;32m'
 red='\033[0;31m'
 blink_red='\033[05;31m'
 nocol='\033[0m'
-TC="Linaro-6.1"
+TC="Linaro"
 # Modify the following variable if you want to build
 export CROSS_COMPILE="/home/dev-harsh1998/android/kernel/tc/gcc-linaro-6.1.1-2016.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-"
 export ARCH=arm
 #export SUBARCH=arm
-export KBUILD_BUILD_USER="Harshit.Jain"
-export KBUILD_BUILD_HOST="BlAcKhWaK"
+export KBUILD_BUILD_USER="Halogen"
+export KBUILD_BUILD_HOST="DeatH-MachinE"
 STRIP="/home/dev-harsh1998/android/kernel/tc/gcc-linaro-6.1.1-2016.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-strip"
 MODULES_DIR=$KERNEL_DIR/arch/arm/boot/AnyKernel2/modules
 echo -e "$green***********************************************"

@@ -53,6 +53,21 @@
 #include "ft5x06_test_lib.h"
 #endif
 
+/*Firmware vendors*/
+#define VENDOR_O_FILM		0x51
+#define VENDOR_MUTTO		0x53
+
+/*IC name*/
+#define IC_FT5X06               0x55
+#define IC_FT5606               0x08
+#define IC_FT5X16               0x0A
+#define IC_FT6208               0x05
+#define IC_FT6X06               0x06
+#define IC_FT6X36               0x36
+#define IC_FT5336               0x14
+#define IC_FT3316               0x13
+#define IC_FT5436i              0x12
+#define IC_FT5336i              0x11
 
 #define FT_DEBUG_DIR_NAME   "ts_debug"
 
@@ -106,8 +121,8 @@ static int binfilelen = 0;
 
 static struct semaphore g_device_mutex;
 
-static ssize_t ctp_version_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
-static ssize_t ctp_version_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
+static s32 ctp_version_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
+static s32 ctp_version_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
 static const struct file_operations ctp_version_proc_fops =
 {
     .write = ctp_version_write,
@@ -116,8 +131,8 @@ static const struct file_operations ctp_version_proc_fops =
     .owner = THIS_MODULE,
 };
 
-static ssize_t ctp_binupdate_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
-static ssize_t ctp_binupdate_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
+static s32 ctp_binupdate_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
+static s32 ctp_binupdate_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
 static const struct file_operations ctp_binupdate_procs_fops =
 {
     .write = ctp_binupdate_proc_write,
@@ -126,8 +141,8 @@ static const struct file_operations ctp_binupdate_procs_fops =
     .owner = THIS_MODULE,
 };
 
-static ssize_t ctp_openshort_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
-static ssize_t ctp_openshort_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
+static s32 ctp_openshort_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos);
+static s32 ctp_openshort_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
 static const struct file_operations ctp_openshort_procs_fops =
 {
     .write = ctp_openshort_proc_write,
@@ -136,8 +151,8 @@ static const struct file_operations ctp_openshort_procs_fops =
     .owner = THIS_MODULE,
 };
 
-static ssize_t ctp_rawdata_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos);
-static ssize_t ctp_rawdata_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
+static s32 ctp_rawdata_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos);
+static s32 ctp_rawdata_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
 static const struct file_operations ctp_rawdata_procs_fops =
 {
 	.write = ctp_rawdata_proc_write,
@@ -147,8 +162,8 @@ static const struct file_operations ctp_rawdata_procs_fops =
 };
 
 
-static ssize_t ctp_testresult_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos);
-static ssize_t ctp_testresult_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
+static s32 ctp_testresult_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos);
+static s32 ctp_testresult_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos);
 static const struct file_operations ctp_testresult_procs_fops =
 {
 	.write = ctp_testresult_proc_write,
@@ -809,13 +824,6 @@ static int ft5x06_ts_resume(struct device *dev)
 #endif
 
 #if defined(CONFIG_FB)
-
-static void fb_notify_resume_work(struct work_struct *work)
-{
-       struct ft5x06_ts_data *ft5x06_data =
-               container_of(work, struct ft5x06_ts_data, fb_notify_work);
-       ft5x06_ts_resume(&ft5x06_data->client->dev);
-}
 static int fb_notifier_callback(struct notifier_block *self,
                                 unsigned long event, void *data)
 {
@@ -829,11 +837,9 @@ static int fb_notifier_callback(struct notifier_block *self,
     {
         blank = evdata->data;
         if (*blank == FB_BLANK_UNBLANK)
-           schedule_work(&ft5x06_data->fb_notify_work);
-         else if (*blank == FB_BLANK_POWERDOWN) {
-            flush_work(&ft5x06_data->fb_notify_work);
+            ft5x06_ts_resume(&ft5x06_data->client->dev);
+        else if (*blank == FB_BLANK_POWERDOWN)
             ft5x06_ts_suspend(&ft5x06_data->client->dev);
-         }
     }
 
     return 0;
@@ -885,8 +891,7 @@ static int ft5x06_fw_upgrade_start(struct i2c_client *client,
 
     if (is_ic_update_crash)
     {
-         chip_id = CTP_IC_TYPE_0;
-
+	    chip_id = CTP_IC_TYPE;
     }
     for(i=0; i<sizeof(fts_updateinfo)/sizeof(struct Upgrade_Info); i++)
     {
@@ -1129,15 +1134,14 @@ static int ft5x06_fw_upgrade_start(struct i2c_client *client,
 }
 
 #if TPD_AUTO_UPGRADE
-/*lenovo project*/
-static unsigned char CTPM_FW1[]= //oufei
+static unsigned char CTPM_FW[]=
 {
-#include "ft_app_ic_v12_ofilm.txt"
+#include "ft_app1.txt"
 };
 
-static unsigned char CTPM_FW2[]= //mudong
+static unsigned char CTPM_FW2[]=
 {
-#include "ft_app_ic_v12_mutto.txt"
+#include "ft_app2.txt"
 };
 
 
@@ -1224,64 +1228,63 @@ int fts_ctpm_fw_upgrade_with_i_file(struct ft5x06_ts_data *data)
     u8 reg_addr;
 
     //=========FW upgrade========================*/
-    pbt_buf = CTPM_FW1;
-    fw_len = sizeof(CTPM_FW1);
-
+    pbt_buf = CTPM_FW;
+    fw_len = sizeof(CTPM_FW);
     CTP_DEBUG("update firmware size:%d", fw_len);
 
-    if (sizeof(CTPM_FW1) < 8 || sizeof(CTPM_FW1) > 32 * 1024 || sizeof(CTPM_FW2) < 8 || sizeof(CTPM_FW2) > 32 * 1024)
+    if (sizeof(CTPM_FW) < 8 || sizeof(CTPM_FW) > 32 * 1024 || sizeof(CTPM_FW2) < 8 || sizeof(CTPM_FW2) > 32 * 1024)
     {
         CTP_ERROR("FW length error\n");
         return -1;
     }
 
-    reg_addr = 0xA6;
-    ft5x06_i2c_read(client, &reg_addr, 1, &uc_tp_fm_ver, 1);
-    reg_addr = 0xA8;
-    ft5x06_i2c_read(client, &reg_addr, 1, &vendor_id, 1);
-    reg_addr = 0xA3;
-    ft5x06_i2c_read(client, &reg_addr, 1, &ic_type, 1);
+	reg_addr = 0xA6;
+	ft5x06_i2c_read(client, &reg_addr, 1, &uc_tp_fm_ver, 1);
+	reg_addr = 0xA8;
+	ft5x06_i2c_read(client, &reg_addr, 1, &vendor_id, 1);
+	reg_addr = 0xA3;
+	ft5x06_i2c_read(client, &reg_addr, 1, &ic_type, 1);
 
-    if((ic_type != CTP_IC_TYPE_0) && (ic_type != CTP_IC_TYPE_1))
-    {
-        CTP_ERROR("IC type dismatch, please check");
-    }
+	if(ic_type != CTP_IC_TYPE)
+	{
+		CTP_ERROR("IC type dismatch, please check");
+	}
 	
-    if(vendor_id == 0xA8 || vendor_id == 0x00 || ic_type == 0xA3 || ic_type == 0x00)
-    {
-        CTP_ERROR("vend_id read error,need project");
-        vendor_id = fts_ctpm_update_project_setting(client);
-        flag_TPID = 1;
-    }
-    if(vendor_id == VENDOR_O_FILM)//oufei
-    {
-        pbt_buf = CTPM_FW1;
-        fw_len = sizeof(CTPM_FW1);
-        CTP_DEBUG("update firmware size:%d", fw_len);
-    }
-    else if(vendor_id == VENDOR_MUTTO)//mudong
-    {
-        pbt_buf = CTPM_FW2;
-        fw_len = sizeof(CTPM_FW2);
-        CTP_DEBUG("update firmware size:%d", fw_len);
-    }
-    else
-    {
-        CTP_ERROR("read vendor_id fail");
-        return -1;
-    }
+	if(vendor_id == 0xA8 || vendor_id == 0x00 || ic_type == 0xA3 || ic_type == 0x00)
+	{
+		CTP_ERROR("vend_id read error,need project");
+		vendor_id = fts_ctpm_update_project_setting(client);
+		flag_TPID = 1;
+	}
 
+	if(vendor_id == 0x51)//oufei
+	{
+		pbt_buf = CTPM_FW;
+		fw_len = sizeof(CTPM_FW);
+		CTP_DEBUG("update firmware size:%d", fw_len);
+	}
+	else if(vendor_id == 0x53)//mudong
+	{
+		pbt_buf = CTPM_FW2;
+		fw_len = sizeof(CTPM_FW2);
+		CTP_DEBUG("update firmware size:%d", fw_len);
+	}
+	else
+	{
+		CTP_ERROR("read vendor_id fail");
+		return -1;
+	}
 
     if ((pbt_buf[fw_len - 8] ^ pbt_buf[fw_len - 6]) == 0xFF
         && (pbt_buf[fw_len - 7] ^ pbt_buf[fw_len - 5]) == 0xFF
         && (pbt_buf[fw_len - 3] ^ pbt_buf[fw_len - 4]) == 0xFF)
     {
 
-        if(vendor_id != pbt_buf[fw_len-1])
-        {
-            CTP_ERROR("vendor_id dismatch, ic:%x, file:%x", vendor_id, pbt_buf[fw_len-1]);
-            return -1;
-        }
+		if(vendor_id != pbt_buf[fw_len-1])
+		{
+			CTP_ERROR("vendor_id dismatch, ic:%x, file:%x", vendor_id, pbt_buf[fw_len-1]);
+			return -1;
+		}
 
         uc_host_fm_ver = pbt_buf[fw_len - 2];
         CTP_DEBUG("[FTS] uc_tp_fm_ver = %d.\n", uc_tp_fm_ver);
@@ -1830,8 +1833,6 @@ static ssize_t ft5x0x_fwupgradeapp_show(struct device *dev,
     return -EPERM;
 }
 #endif
-
-#if (CTP_PROC_INTERFACE || CTP_SYS_APK_UPDATE)
 //upgrade from app.bin
 static ssize_t ft5x0x_fwupgradeapp_store(struct device *dev,
         struct device_attribute *attr,
@@ -1854,8 +1855,6 @@ static ssize_t ft5x0x_fwupgradeapp_store(struct device *dev,
 
     return count;
 }
-
-#endif
 
 #if CTP_SYS_APK_UPDATE
 
@@ -2200,7 +2199,7 @@ static int ft5x06_parse_dt(struct device *dev,
 #endif
 
 #if CTP_PROC_INTERFACE
-static ssize_t ctp_version_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
+static s32 ctp_version_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
 {
     int num, i;
     u8 fw_info[6] = {0x00};
@@ -2218,14 +2217,12 @@ static ssize_t ctp_version_read(struct file *file, char __user *user_buf,size_t 
     *ppos += num;
     return num;
 }
-
-
-static ssize_t ctp_version_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
+static s32 ctp_version_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
 {
     return -1;
 }
 
-static ssize_t ctp_binupdate_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
+static s32 ctp_binupdate_proc_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
 {
 	if(*ppos)
         return 0;
@@ -2235,7 +2232,7 @@ static ssize_t ctp_binupdate_proc_read(struct file *file, char __user *user_buf,
 	//ft5x0x_fwupgradeapp_store(&update_client->dev, NULL, binfilename, binfilelen);
 	return count;
 }
-static ssize_t ctp_binupdate_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
+static s32 ctp_binupdate_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
 {
 	if(*ppos)
         return 0;
@@ -2243,68 +2240,68 @@ static ssize_t ctp_binupdate_proc_write(struct file *filp, const char __user *us
 	memset(binfilename, '\0', 50);
 	memcpy(binfilename, userbuf, count);
 	binfilelen = count;
-	//CTP_INFO("count %l, buf %s", count, userbuf);
+	CTP_INFO("count %d, buf %s", count, userbuf);
 	ft5x0x_fwupgradeapp_store(&update_client->dev, NULL, binfilename, binfilelen);
 	return count;
 }
 
-static ssize_t ctp_openshort_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos)
+static s32 ctp_openshort_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos)
 {
-    char *ptr = buf;
-    char cfgname[128];
-    u8 fw_info[6] = {0x00};
-    u8 reg_addr = 0xA3;
-
-    if(*ppos)
-    {
-        CTP_INFO("tp test again return\n");
-        return 0;
-    }
-    *ppos += count;
+	char *ptr = buf;
+	char cfgname[128];
+	u8 fw_info[6] = {0x00};
+	u8 reg_addr = 0xA3;
+	
+	if(*ppos)
+	{
+		CTP_INFO("tp test again return\n");
+		return 0;
+	}
+	*ppos += count;
 
     ft5x06_i2c_read(update_client, &reg_addr, 1, fw_info, 6);
     CTP_INFO("ic is %x", fw_info[5]);
-    //match the tp and ini file
-    if(fw_info[5] == VENDOR_O_FILM)
-    {
-        sprintf(cfgname, "%s", "ft5x06_ic_v14_ofilm.ini");
-        CTP_INFO("ic is oufei");
-    }
-    else if(fw_info[5] == VENDOR_MUTTO)
-    {
-        sprintf(cfgname, "%s", "ft5x06_ic_v14_mutto.ini");
-        CTP_INFO("ic is mudong");
-    }
+	//match the tp and ini file
+	if(fw_info[5] == 0x51)
+	{
+		sprintf(cfgname, "%s", "ft5x06_1.ini");
+		CTP_INFO("ic is oufei");
+	}
+	else if(fw_info[5] == 0x53)
+	{
+		sprintf(cfgname, "%s", "ft5x06_2.ini");
+		CTP_INFO("ic is mudong");
+	}
 	else
-    {
-        CTP_INFO("no ini match the project ctp,please check!");
-        return count;
-    }
-
-    Init_I2C_Write_Func(focal_i2c_Write);
-    Init_I2C_Read_Func(focal_i2c_Read);
-    if(ft5x0x_get_testparam_from_ini(cfgname) <0)
-    {
-        CTP_ERROR("get testparam from ini failure\n");
-        sprintf(ptr, "result=%d\n", 0);
-    }
-    else {
-        if(true == StartTestTP())
-        {
-            CTP_INFO("tp test pass\n");
-            sprintf(ptr, "result=%d\n", 1);
-        }
-        else
-        {
-            CTP_INFO("tp test failure\n");
-            sprintf(ptr, "result=%d\n", 0);
-            g_focalscaptested = 1;
-        }
-        FreeTestParamData();
-    }
-    return count;
+	{
+		CTP_INFO("no ini match the project ctp,please check!");
+		return count;
+	}
+	
+	Init_I2C_Write_Func(focal_i2c_Write);
+	Init_I2C_Read_Func(focal_i2c_Read);
+	if(ft5x0x_get_testparam_from_ini(cfgname) <0)
+	{
+		CTP_ERROR("get testparam from ini failure\n");
+		sprintf(ptr, "result=%d\n", 0);
+	}
+	else {
+		if(true == StartTestTP())
+		{
+			CTP_INFO("tp test pass\n");
+			sprintf(ptr, "result=%d\n", 1);
+		}
+		else
+		{
+			CTP_INFO("tp test failure\n");
+		 	sprintf(ptr, "result=%d\n", 0);
+			g_focalscaptested = 1;
+		 }
+		FreeTestParamData();
+	}
+	return count;
 }
-static ssize_t ctp_openshort_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
+static s32 ctp_openshort_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
 {
 	return -1;
 }
@@ -2438,7 +2435,7 @@ void ctp_GetRawData(struct i2c_client *client,s32 RawData[TX_NUM_MAX][RX_NUM_MAX
 s32 RawData [ TX_NUM_MAX ] [ RX_NUM_MAX ];
 
 
-static ssize_t ctp_rawdata_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos)
+static s32 ctp_rawdata_proc_read(struct file *file, char __user *buf,size_t count, loff_t *ppos)
 {
 	int i,j;
 	if(*ppos)
@@ -2463,12 +2460,12 @@ static ssize_t ctp_rawdata_proc_read(struct file *file, char __user *buf,size_t 
 	*ppos += count;
 	return count;
 }
-static ssize_t ctp_rawdata_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
+static s32 ctp_rawdata_proc_write(struct file *filp, const char __user *userbuf,size_t count, loff_t *ppos)
 {
 	return -1;
 }
 
-static ssize_t ctp_testresult_proc_read(struct file * file,char __user * buf,size_t count,loff_t * ppos)
+static s32 ctp_testresult_proc_read(struct file * file,char __user * buf,size_t count,loff_t * ppos)
 {
 	ssize_t ret_count = 0;
 	char *databuf = NULL;
@@ -2489,7 +2486,7 @@ static ssize_t ctp_testresult_proc_read(struct file * file,char __user * buf,siz
 	if(g_focalscaptested == 1)
 	{
 	     ret_count = focal_save_error_data(databuf, (2 * 1024));
-		// CTP_INFO("return size %d", ret_count);
+		 CTP_INFO("return size %d", ret_count);
 	     memcpy(buf, databuf, ret_count);
 	     g_focalscaptested = 0;
 	}
@@ -2505,7 +2502,7 @@ static ssize_t ctp_testresult_proc_read(struct file * file,char __user * buf,siz
 	return ret_count;
 }
 
-static ssize_t ctp_testresult_proc_write(struct file * filp,const char __user * userbuf,size_t count,loff_t * ppos)
+static s32 ctp_testresult_proc_write(struct file * filp,const char __user * userbuf,size_t count,loff_t * ppos)
 {
 	return -EPERM;
 }
@@ -2564,7 +2561,6 @@ void create_ctp_proc(void)
 }
 #endif
 
-#if 1
 static int hardwareinfo_set(struct ft5x06_ts_data *data,u8 value_name)
 {
 	char firmware_ver[HARDWARE_MAX_ITEM_LONGTH];
@@ -2576,10 +2572,6 @@ static int hardwareinfo_set(struct ft5x06_ts_data *data,u8 value_name)
 		snprintf(vendor_for_id,HARDWARE_MAX_ITEM_LONGTH,"O-film");
 	else if (data->fw_vendor_id == VENDOR_MUTTO)
 		snprintf(vendor_for_id,HARDWARE_MAX_ITEM_LONGTH,"Mutto");
-        else if (data->fw_vendor_id == VENDOR_BIEL)
-		snprintf(vendor_for_id,HARDWARE_MAX_ITEM_LONGTH,"Biel");
-	else if (data->fw_vendor_id == VENDOR_WINTEK)
-		snprintf(vendor_for_id,HARDWARE_MAX_ITEM_LONGTH,"WinTek");
 	else 
 		snprintf(vendor_for_id,HARDWARE_MAX_ITEM_LONGTH,"Other vendor");
 
@@ -2626,7 +2618,6 @@ static int hardwareinfo_set(struct ft5x06_ts_data *data,u8 value_name)
 
 	return 0;
 }
-#endif
 #if FTS_PROC_APK_DEBUG
 int ft5x0x_i2c_Read(struct i2c_client *client, char *writebuf,
 		    int writelen, char *readbuf, int readlen)
@@ -2688,7 +2679,7 @@ int ft5x0x_i2c_Write(struct i2c_client *client, char *writebuf, int writelen)
 	return ret;
 }
 
-static ssize_t ft5x0x_debug_write(struct file *filp, const char __user *buff,size_t len, loff_t *ppos)
+static s32 ft5x0x_debug_write(struct file *filp, const char __user *buff,size_t len, loff_t *ppos)
 {
 	struct i2c_client *client = update_client;
 	unsigned char writebuf[FTS_PACKET_LENGTH];
@@ -2756,7 +2747,7 @@ static ssize_t ft5x0x_debug_write(struct file *filp, const char __user *buff,siz
 unsigned char debug_read_buf[PAGE_SIZE];
 
 /*interface of read proc*/
-static ssize_t ft5x0x_debug_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
+static s32 ft5x0x_debug_read(struct file *file, char __user *user_buf,size_t count, loff_t *ppos)
 {
 	struct i2c_client *client = update_client;
 	int ret = 0;
@@ -2784,7 +2775,7 @@ static ssize_t ft5x0x_debug_read(struct file *file, char __user *user_buf,size_t
 			dev_err(&client->dev, "%s:read iic error\n", __func__);
 			return ret;
 		} else
-//			CTP_ERROR("%s:value=0x%02x,count %d\n", __func__, debug_read_buf[0], count);
+			CTP_ERROR("%s:value=0x%02x,count %d\n", __func__, debug_read_buf[0], count);
 		num_read_chars = 1;
 		break;
 	case PROC_RAWDATA:
@@ -3053,7 +3044,7 @@ static int ft5x06_ts_probe(struct i2c_client *client,
 
     err = request_threaded_irq(client->irq, NULL,
                                ft5x06_ts_interrupt,
-                               pdata->irq_gpio_flags | IRQF_ONESHOT,
+                               pdata->irqflags | IRQF_ONESHOT,
                                client->dev.driver->name, data);
     if (err)
     {
@@ -3159,11 +3150,10 @@ static int ft5x06_ts_probe(struct i2c_client *client,
                      data->fw_ver[1], data->fw_ver[2]);
    
     err = hardwareinfo_set(data,ic_name);
-   if (err < 0)
+    if (err < 0)
 	    dev_err(&client->dev, "hardwareinfo set failed");
 
 #if defined(CONFIG_FB)
-	INIT_WORK(&data->fb_notify_work, fb_notify_resume_work);
     data->fb_notif.notifier_call = fb_notifier_callback;
 
     err = fb_register_client(&data->fb_notif);
