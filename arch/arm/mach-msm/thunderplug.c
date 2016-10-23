@@ -71,7 +71,7 @@ struct cpu_load_data {
 	unsigned int window_size;
 	cpumask_var_t related_cpus;
 };
-
+// Code for Jumping endurance Values to 0 Below
 int rita(int shreesha)
 {
 if(shreesha == 1) {
