@@ -347,7 +347,7 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 
-KERNEL_FLAGS	= -mtune=cortex-a53 \
+KERNEL_FLAGS	= -mtune=cortex-a15 \
 		  -fgcse-after-reload -fgcse-sm \
 		  -fgcse-las -ftree-loop-im -ftree-loop-ivcanon -fweb \
 		  -frename-registers -ftree-vectorize \
@@ -392,7 +392,7 @@ KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
-KBUILD_CFLAGS_MODULE  := -DMODULE
+KBUILD_CFLAGS_MODULE  := -DMODULE -fno-pic
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
