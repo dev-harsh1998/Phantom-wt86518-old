@@ -82,7 +82,7 @@ else  # Target is 32-bit.
 obj-$(CONFIG_TOUCHSCREEN_FT5X06)	+= ft5x06_ts.o focal_mcap_test_lib.a
 endif
 
-
+obj-$(CONFIG_WAKE_GESTURES)		+= wake_gestures.o
 obj-$(CONFIG_TOUCHSCREEN_MSTAR21XX)	+= msg21xx_ts.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_RMI4_DEV)	+= synaptics_rmi_dev.o
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_FW_UPDATE) 	+= synaptics_fw_update.o
