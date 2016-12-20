@@ -37,12 +37,12 @@ blink_red='\033[05;31m'
 nocol='\033[0m'
 TC="Linaro"
 # Modify the following variable if you want to build
-export CROSS_COMPILE="/home/dev-harsh1998/android/kernel/tc/gcc-linaro-6.1.1-2016.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-"
+export CROSS_COMPILE="/home/harshit/android/kernel/toolchain/gcc-linaro-6.2.1-2016.11-x86_64_arm-eabi/bin/arm-eabi-"
 export ARCH=arm
 #export SUBARCH=arm
 export KBUILD_BUILD_USER="Halogen"
 export KBUILD_BUILD_HOST="DeatH-MachinE"
-STRIP="/home/dev-harsh1998/android/kernel/tc/gcc-linaro-6.1.1-2016.08-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-strip"
+STRIP="/home/harshit/android/kernel/toolchain/gcc-linaro-6.2.1-2016.11-x86_64_arm-eabi/bin/arm-eabi-strip"
 MODULES_DIR=$KERNEL_DIR/arch/arm/boot/AnyKernel2/modules
 echo -e "$green***********************************************"
 echo "  Brace Yourselves You are building one of the best Msm8916 kernel ;)   "

@@ -31,17 +31,16 @@
 #define MAKO_HOTPLUG "mako_hotplug"
 
 #define DEFAULT_HOTPLUG_ENABLED 0
-#define DEFAULT_LOAD_THRESHOLD 70 // Tune Friendly to msm8916
-#define DEFAULT_HIGH_LOAD_COUNTER 10
-#define DEFAULT_MAX_LOAD_COUNTER 20
-//#define DEFAULT_CPUFREQ_UNPLUG_LIMIT 1800000
-#define DEFAULT_CPUFREQ_UNPLUG_LIMIT 1094400
+#define DEFAULT_LOAD_THRESHOLD 65
+#define DEFAULT_HIGH_LOAD_COUNTER 7
+#define DEFAULT_MAX_LOAD_COUNTER 18
+#define DEFAULT_CPUFREQ_UNPLUG_LIMIT 400000
 #define DEFAULT_MIN_TIME_CPU_ONLINE 1
 #define DEFAULT_TIMER 1
 
 #define MIN_CPU_UP_US (200 * USEC_PER_MSEC)
 #define NUM_POSSIBLE_CPUS num_possible_cpus()
-#define HIGH_LOAD (80)
+#define HIGH_LOAD (95)
 
 struct cpu_stats {
 	unsigned int counter;
@@ -104,7 +103,7 @@ static inline void cpus_online_work(void)
 {
 	unsigned int cpu;
 
-	for (cpu < 3; cpu < 4; cpu++) {
+	for (cpu = 2; cpu < 4; cpu++) {
 		if (cpu_is_offline(cpu))
 			cpu_up(cpu);
 	}
@@ -116,7 +115,7 @@ static inline void cpus_offline_work(void)
 {
 	unsigned int cpu;
 
-	for (cpu = 4; cpu > 1; cpu--) {
+	for (cpu = 3; cpu > 1; cpu--) {
 		if (cpu_online(cpu))
 			cpu_down(cpu);
 	}
@@ -252,7 +251,7 @@ static void __ref decide_hotplug_func(struct work_struct *work)
 	}
 
 	queue_delayed_work(wq, &decide_hotplug,
-		msecs_to_jiffies(t->timer * HZ));
+		msecs_to_jiffies(t->timer * 250));
 
 	return;
 
@@ -263,7 +262,7 @@ reschedule:
 	 * we don't need to run this work every 100ms, but rather just
 	 * once every 2 seconds
 	 */
-	queue_delayed_work(wq, &decide_hotplug, HZ * 2);
+	queue_delayed_work(wq, &decide_hotplug,  500);
 }
 
 /*
@@ -513,7 +512,7 @@ static int mako_hotplug_probe(struct platform_device *pdev)
 
 	INIT_DELAYED_WORK(&decide_hotplug, decide_hotplug_func);
 
-	queue_delayed_work(wq, &decide_hotplug, HZ * 30);
+	queue_delayed_work(wq, &decide_hotplug, 250 * 30);
 err:
 	return ret;
 }
