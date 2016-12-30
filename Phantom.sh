@@ -40,8 +40,8 @@ TC="Linaro"
 export CROSS_COMPILE="/home/harshit/android/kernel/toolchain/gcc-linaro-6.2.1-2016.11-x86_64_arm-eabi/bin/arm-eabi-"
 export ARCH=arm
 #export SUBARCH=arm
-export KBUILD_BUILD_USER="Halogen"
-export KBUILD_BUILD_HOST="DeatH-MachinE"
+export KBUILD_BUILD_USER="Harshit"
+export KBUILD_BUILD_HOST="Phantom"
 STRIP="/home/harshit/android/kernel/toolchain/gcc-linaro-6.2.1-2016.11-x86_64_arm-eabi/bin/arm-eabi-strip"
 MODULES_DIR=$KERNEL_DIR/arch/arm/boot/AnyKernel2/modules
 echo -e "$green***********************************************"
@@ -67,6 +67,7 @@ echo -e "$yellow***********************************************"
 echo "          Initialising DEFCONFIG        "
 echo -e "***********************************************$nocol"
 make cyanogenmod_wt86518-32_defconfig -j12
+gedit .config
 echo -e "$yellow***********************************************"
 echo "          Cooking PhAnToM Kernel         "
 echo -e "***********************************************$nocol"
